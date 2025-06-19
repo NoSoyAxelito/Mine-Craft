@@ -1,1381 +1,1006 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Objetivos - App Híbrida</title>
+    <title>Mind Craft - Mis Objetivos</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-            min-height: 100vh;
-            color: white;
-            overflow-x: hidden;
-        }
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #333;
+    min-height: 100vh;
+}
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            min-height: 100vh;
-        }
+.app-bar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-top: 20px;
-        }
+.app-title {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
 
-        .header h1 {
-            font-size: 24px;
-            font-weight: 600;
-        }
+.user-menu {
+    position: relative;
+    display: inline-block;
+}
 
-        .profile-section {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
 
-        .profile-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #6C63FF, #3F51B5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
+.user-avatar:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
 
-        .settings-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            opacity: 0.9;
-            transition: opacity 0.3s;
-        }
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    min-width: 180px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    z-index: 1000;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-top: 8px;
+}
 
-        .settings-btn:hover {
-            opacity: 1;
-        }
+.dropdown-content a {
+    color: #333;
+    padding: 16px 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
 
-        .glass-card {
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.1), 
-                rgba(255, 255, 255, 0.05)
-            );
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+.dropdown-content a:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
 
-        .glass-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-        }
+.dropdown-content a i {
+    margin-right: 12px;
+    font-size: 18px;
+}
 
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
+.show {
+    display: block;
+    animation: fadeInDown 0.3s ease;
+}
 
-        .section-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: linear-gradient(45deg, #6C63FF, #3F51B5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-        .section-title {
-            font-size: 20px;
-            font-weight: 600;
-        }
+.container {
+    padding: 32px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+}
 
-        .goal-item {
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.1), 
-                rgba(255, 255, 255, 0.05)
-            );
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 16px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+.section-title {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    padding: 18px 24px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 18px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #2c3e50;
+}
 
-        .goal-item:hover {
-            transform: translateY(-1px);
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.15), 
-                rgba(255, 255, 255, 0.08)
-            );
-        }
+.goal-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
 
-        .goal-content {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
+.goal-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
 
-        .goal-indicator {
-            width: 4px;
-            height: 40px;
-            background: linear-gradient(to bottom, #6C63FF, #3F51B5);
-            border-radius: 2px;
-        }
+.goal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
 
-        .goal-text {
-            flex: 1;
-            font-size: 16px;
-            line-height: 1.4;
-        }
+.goal-text {
+    font-size: 16px;
+    margin-bottom: 16px;
+    line-height: 1.6;
+    color: #2c3e50;
+    font-weight: 500;
+}
 
-        .goal-progress {
-            margin-top: 12px;
-        }
+.progress-container {
+    margin-bottom: 20px;
+}
 
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            overflow: hidden;
-        }
+.progress-bar {
+    height: 12px;
+    background: rgba(224, 224, 224, 0.3);
+    border-radius: 20px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #6C63FF, #3F51B5);
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    transition: width 0.6s ease;
+    position: relative;
+    overflow: hidden;
+}
 
-        .progress-text {
-            font-size: 14px;
-            opacity: 0.7;
-            margin-top: 6px;
-        }
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 2s infinite;
+}
 
-        .daily-goal-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px;
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.1), 
-                rgba(255, 255, 255, 0.05)
-            );
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
 
-        .daily-goal-item:hover {
-            transform: translateY(-1px);
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.15), 
-                rgba(255, 255, 255, 0.08)
-            );
-        }
+.progress-text {
+    font-size: 13px;
+    color: #666;
+    margin-top: 8px;
+    font-weight: 500;
+}
 
-        .daily-goal-item.completed {
-            opacity: 0.7;
-        }
+.goal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
 
-        .daily-goal-item.completed .daily-goal-text {
-            text-decoration: line-through;
-        }
+.action-button {
+    background: rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    color: #667eea;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+}
 
-        .daily-goal-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            background: linear-gradient(45deg, #6C63FF, #3F51B5);
-        }
+.action-button:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
 
-        .daily-goal-icon.completed {
-            background: linear-gradient(45deg, #4CAF50, #2E7D32);
-        }
+.action-button.delete {
+    background: rgba(244, 67, 54, 0.1);
+    border-color: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+}
 
-        .daily-goal-text {
-            flex: 1;
-            font-size: 16px;
-        }
+.action-button.delete:hover {
+    background: #f44336;
+    color: white;
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+}
 
-        .chevron {
-            opacity: 0.5;
-            font-size: 18px;
-        }
+.floating-buttons {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-end;
+    z-index: 99;
+}
 
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            opacity: 0.6;
-        }
+.fab {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 28px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
+.fab:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+}
 
-        .fab-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            align-items: flex-end;
-        }
+.fab-secondary {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
 
-        .fab {
-            background: linear-gradient(45deg, #6C63FF, #3F51B5);
-            border: none;
-            border-radius: 30px;
-            padding: 16px 24px;
-            color: white;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
-            transition: all 0.3s ease;
-            animation: fadeInUp 0.5s ease;
-        }
+.fab-secondary:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
 
-        .fab:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.5);
-        }
+.daily-goal {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
 
-        .fab.secondary {
-            background: linear-gradient(45deg, #FF6B6B, #FF5252);
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-        }
+.daily-goal:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
 
-        .fab.secondary:hover {
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
-        }
+.daily-goal-icon {
+    color: #667eea;
+    font-size: 24px;
+}
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
+.daily-goal-text {
+    flex: 1;
+    font-weight: 500;
+    line-height: 1.5;
+}
 
-        .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.2), 
-                rgba(255, 255, 255, 0.1)
-            );
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 32px;
-            max-width: 400px;
-            width: 90%;
-            color: white;
-            animation: slideIn 0.3s ease;
-        }
+.completed {
+    text-decoration: line-through;
+    color: #666;
+    opacity: 0.7;
+}
 
-        .modal-header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+}
 
-        .modal-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
-            background: linear-gradient(45deg, #6C63FF, #3F51B5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            margin: 0 auto 16px;
-        }
+.modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    margin: 10% auto;
+    padding: 32px;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: modalAppear 0.3s ease;
+}
 
-        .modal-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
+@keyframes modalAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
 
-        .modal-subtitle {
-            opacity: 0.8;
-            margin-bottom: 16px;
-        }
+.modal-header {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+.modal-body {
+    margin-bottom: 24px;
+    line-height: 1.6;
+    color: #555;
+}
 
-        .form-input {
-            width: 100%;
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            color: white;
-            font-size: 16px;
-        }
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
 
-        .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
+.modal-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
 
-        .button-group {
-            display: flex;
-            gap: 12px;
-        }
+.modal-button-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
 
-        .btn {
-            flex: 1;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 25px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+.modal-button-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
 
-        .btn-primary {
-            background: linear-gradient(45deg, #6C63FF, #3F51B5);
-            color: white;
-        }
+.modal-button-secondary {
+    background: rgba(224, 224, 224, 0.8);
+    color: #333;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+.modal-button-secondary:hover {
+    background: rgba(224, 224, 224, 1);
+    transform: translateY(-2px);
+}
 
-        .btn:hover {
-            transform: translateY(-1px);
-        }
+.modal-button-danger {
+    background: #f44336;
+    color: white;
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+}
 
-        .toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(45deg, #4CAF50, #2E7D32);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
-            z-index: 2000;
-            animation: slideUp 0.3s ease;
-            display: none;
-        }
+.modal-button-danger:hover {
+    background: #d32f2f;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+.loading {
+    text-align: center;
+    color: #666;
+    padding: 32px;
+    font-style: italic;
+}
 
-        @keyframes fadeInUp {
-            from { 
-                opacity: 0; 
-                transform: translateY(20px);
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0);
-            }
-        }
+.empty-state {
+    text-align: center;
+    color: #666;
+    padding: 32px;
+    font-style: italic;
+    line-height: 1.6;
+}
 
-        @keyframes slideIn {
-            from { 
-                opacity: 0; 
-                transform: translate(-50%, -60%);
-            }
-            to { 
-                opacity: 1; 
-                transform: translate(-50%, -50%);
-            }
-        }
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 16px;
+    }
+    
+    .goal-card {
+        padding: 20px;
+        border-radius: 16px;
+    }
+    
+    .floating-buttons {
+        bottom: 20px;
+        right: 16px;
+    }
+    
+    .fab {
+        padding: 14px 20px;
+        font-size: 13px;
+    }
+    
+    .modal-content {
+        margin: 20% auto;
+        padding: 24px;
+        width: 95%;
+    }
+    
+    .app-bar {
+        padding: 16px 20px;
+    }
+    
+    .app-title {
+        font-size: 20px;
+    }
+}
 
-        @keyframes slideUp {
-            from { 
-                opacity: 0; 
-                transform: translateX(-50%) translateY(20px);
-            }
-            to { 
-                opacity: 1; 
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .fab-container {
-                right: 15px;
-                bottom: 15px;
-            }
-            
-            .modal-content {
-                padding: 24px;
-                width: 95%;
-            }
-        }
+@media (max-width: 480px) {
+    .goal-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .action-button {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .floating-buttons {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .fab {
+        border-radius: 20px;
+        padding: 12px 16px;
+        flex: 1;
+        justify-content: center;
+        max-width: 120px;
+    }
+    
+    .fab span:last-child {
+        display: none;
+    }
+}
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <h1>Mis Objetivos</h1>
-            <div class="profile-section">
-                <div class="profile-avatar" id="profileAvatar">U</div>
-                <button class="settings-btn" onclick="openSettings()">⚙️</button>
+    <div class="app-bar">
+        <div class="app-title">Mis Objetivos</div>
+        <div class="user-menu">
+            <div class="user-avatar" id="userAvatar">U</div>
+            <div class="dropdown-content" id="userDropdown">
+                <a href="#" id="logoutBtn"><i class="material-icons" style="font-size:18px">logout</i> Cerrar sesión</a>
             </div>
-        </header>
-
-        <!-- Objetivos Diarios de Hoy -->
-        <section>
-            <div class="glass-card">
-                <div class="section-header">
-                    <div class="section-icon">📅</div>
-                    <h2 class="section-title">Objetivos Diarios de Hoy</h2>
-                </div>
-            </div>
-
-            <div id="dailyGoalsContainer">
-                <!-- Los objetivos diarios se cargarán aquí -->
-            </div>
-        </section>
-
-        <!-- Objetivos Semanales -->
-        <section>
-            <div class="glass-card">
-                <div class="section-header">
-                    <div class="section-icon">📋</div>
-                    <h2 class="section-title">Objetivos Semanales</h2>
-                </div>
-            </div>
-
-            <div id="weeklyGoalsContainer">
-                <!-- Los objetivos semanales se cargarán aquí -->
-            </div>
-        </section>
+        </div>
     </div>
 
-    <!-- FAB Buttons -->
-    <div class="fab-container">
-        <button class="fab secondary" onclick="openCreateDailyGoal()">
-            📅 Crear Objetivo Diario
+    <div class="container">
+        <div class="section-title">Objetivos Normales</div>
+        <div id="normalGoals">
+            <div class="loading">Cargando objetivos...</div>
+        </div>
+
+        <div class="section-title">Objetivos Diarios de Hoy</div>
+        <div id="dailyGoals">
+            <div class="loading">Cargando objetivos diarios...</div>
+        </div>
+    </div>
+
+    <div class="floating-buttons">
+        <button class="fab fab-secondary" id="viewDailyGoalsBtn">
+            <span class="material-icons">view_list</span>
+            <span>Ver Objetivos Diarios</span>
+        </button>
+        <button class="fab" id="addGoalBtn">
+            <span class="material-icons">add</span>
+            <span>Objetivo</span>
+        </button>
+        <button class="fab" id="addDailyGoalBtn">
+            <span class="material-icons">calendar_today</span>
+            <span>Crear Objetivo Diario</span>
         </button>
     </div>
 
-    <!-- Modal para Crear Objetivo Diario -->
-    <div id="createDailyGoalModal" class="modal">
+    <!-- Modal para confirmación de eliminación -->
+    <div id="deleteModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-icon">📅</div>
-                <h3 class="modal-title">Nuevo Objetivo Diario</h3>
-                <p class="modal-subtitle">Crea un nuevo objetivo para cumplir diariamente</p>
+            <div class="modal-header">Confirmar eliminación</div>
+            <div class="modal-body">
+                ¿Estás seguro de que quieres eliminar este objetivo? Esta acción no se puede deshacer.
             </div>
-
-            <form id="dailyGoalForm">
-                <div class="form-group">
-                    <input type="text" id="dailyGoalText" class="form-input" 
-                           placeholder="Describe tu objetivo diario..." required>
-                </div>
-
-                <div class="form-group">
-                    <label style="display: block; margin-bottom: 10px; opacity: 0.8;">
-                        Días de la semana:
-                    </label>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="checkbox" value="Lunes" name="days" checked> Lunes
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="checkbox" value="Martes" name="days" checked> Martes
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="checkbox" value="Miércoles" name="days" checked> Miércoles
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="checkbox" value="Jueves" name="days" checked> Jueves
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="checkbox" value="Viernes" name="days" checked> Viernes
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="checkbox" value="Sábado" name="days"> Sábado
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="checkbox" value="Domingo" name="days"> Domingo
-                        </label>
-                    </div>
-                </div>
-
-                <div class="button-group">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal('createDailyGoalModal')">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        Crear Objetivo
-                    </button>
-                </div>
-            </form>
+            <div class="modal-actions">
+                <button class="modal-button modal-button-secondary" id="cancelDelete">Cancelar</button>
+                <button class="modal-button modal-button-danger" id="confirmDelete">Eliminar</button>
+            </div>
         </div>
     </div>
 
-    <!-- Modal para Objetivo Diario -->
-    <div id="dailyGoalDetailModal" class="modal">
+    <!-- Modal para detalles del objetivo -->
+    <div id="detailsModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-icon">🎯</div>
-                <h3 class="modal-title">Objetivo Diario</h3>
-                <p id="dailyGoalDetailText" class="modal-subtitle"></p>
+            <div class="modal-header">Detalles del Objetivo</div>
+            <div class="modal-body" id="detailsModalBody">
+                <!-- Contenido dinámico -->
             </div>
-
-            <div class="button-group" style="margin-bottom: 16px;">
-                <button class="btn btn-primary" onclick="markDailyGoalCompleted()">
-                    ✅ Marcar Completado
-                </button>
-                <button class="btn" style="background: linear-gradient(45deg, #f44336, #d32f2f);" 
-                        onclick="markDailyGoalFailed()">
-                    ❌ Marcar Fallido
-                </button>
+            <div class="modal-actions">
+                <button class="modal-button modal-button-secondary" id="closeDetails">Cerrar</button>
+                <button class="modal-button modal-button-primary" id="manageMiniGoals">Gestionar Miniobjetivos</button>
             </div>
-
-            <button class="btn btn-secondary" onclick="closeModal('dailyGoalDetailModal')">
-                Cerrar
-            </button>
         </div>
     </div>
 
-    <!-- Toast -->
-    <div id="toast" class="toast"></div>
+    <!-- Modal para objetivo diario -->
+    <div id="dailyGoalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Objetivo Diario</div>
+            <div class="modal-body" id="dailyGoalModalBody">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button modal-button-secondary" id="closeDailyGoal">Cerrar</button>
+                <button class="modal-button modal-button-primary" id="toggleDailyGoal">Marcar como Completado</button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Firebase Configuration -->
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs, addDoc, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBEiNm3PiUYbKqb-vllnwfhQw2rIAumy5Y",
             authDomain: "balatrobase-e14a5.firebaseapp.com",
             projectId: "balatrobase-e14a5",
-            storageBucket: "balatrobase-e14a5.firebasestorage.app",
+            storageBucket: "balatrobase-e14a5.appspot.com",
             messagingSenderId: "828687429765",
             appId: "1:828687429765:web:c09239689b1107fad2b9ec",
             measurementId: "G-4VN4XPBGEL"
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        window.auth = auth;
-        window.db = db;
-        window.addDoc = addDoc;
-        window.collection = collection;
-        window.getDocs = getDocs;
-        window.doc = doc;
-        window.updateDoc = updateDoc;
-        window.query = query;
-        window.where = where;
-        window.orderBy = orderBy;
-        window.Timestamp = Timestamp;
-
-        // Verificar autenticación
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // Usuario autenticado
-                updateProfileInfo(user);
-                loadDailyGoals();
-                loadWeeklyGoals();
-            } else {
-                // Redirigir al login si no está autenticado
-                window.location.href = '/login.html';
-            }
-        });
-
-        function updateProfileInfo(user) {
-            const profileAvatar = document.getElementById('profileAvatar');
-            if (user.displayName) {
-                profileAvatar.textContent = user.displayName.charAt(0).toUpperCase();
-            } else if (user.email) {
-                profileAvatar.textContent = user.email.charAt(0).toUpperCase();
-            }
-        }
-    </script>
-
-    <script>
+        // Variables globales
         let currentGoalId = null;
-        let currentUser = null;
+        let currentUserId = null;
+        let currentDailyGoalId = null;
+        let currentDailyGoalCompleted = false;
 
-        // Datos de ejemplo para demostración
-        let dailyGoals = [
-            {
-                id: '1',
-                texto: 'Hacer ejercicio por 30 minutos',
-                dias: ['Lunes', 'Miércoles', 'Viernes'],
-                completado: {}
-            },
-            {
-                id: '2',
-                texto: 'Leer 20 páginas de un libro',
-                dias: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
-                completado: {}
-            }
-        ];
+        // DOM elements
+        const elements = {
+            userAvatar: document.getElementById('userAvatar'),
+            userDropdown: document.getElementById('userDropdown'),
+            logoutBtn: document.getElementById('logoutBtn'),
+            normalGoalsContainer: document.getElementById('normalGoals'),
+            dailyGoalsContainer: document.getElementById('dailyGoals'),
+            addGoalBtn: document.getElementById('addGoalBtn'),
+            addDailyGoalBtn: document.getElementById('addDailyGoalBtn'),
+            viewDailyGoalsBtn: document.getElementById('viewDailyGoalsBtn'),
+            // Modales
+            deleteModal: document.getElementById('deleteModal'),
+            detailsModal: document.getElementById('detailsModal'),
+            dailyGoalModal: document.getElementById('dailyGoalModal'),
+            // Botones de modales
+            cancelDelete: document.getElementById('cancelDelete'),
+            confirmDelete: document.getElementById('confirmDelete'),
+            closeDetails: document.getElementById('closeDetails'),
+            manageMiniGoals: document.getElementById('manageMiniGoals'),
+            closeDailyGoal: document.getElementById('closeDailyGoal'),
+            toggleDailyGoal: document.getElementById('toggleDailyGoal')
+        };
 
-        let weeklyGoals = [
-            {
-                id: '1',
-                texto: 'Completar el proyecto de trabajo',
-                miniobjetivos: [
-                    { texto: 'Investigar tecnologías', completado: true },
-                    { texto: 'Crear prototipo', completado: true },
-                    { texto: 'Implementar funcionalidades', completado: false },
-                    { texto: 'Hacer pruebas', completado: false }
-                ]
-            },
-            {
-                id: '2',
-                texto: 'Aprender una nueva habilidad',
-                miniobjetivos: [
-                    { texto: 'Elegir curso online', completado: true },
-                    { texto: 'Completar módulo 1', completado: false },
-                    { texto: 'Hacer ejercicios prácticos', completado: false }
-                ]
-            }
-        ];
-
-        // Funciones de utilidad
-        function getCurrentDay() {
-            const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-            return days[new Date().getDay()];
-        }
-
-        function getTodayString() {
-            const today = new Date();
-            return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-        }
-
-        function isDayActive(days) {
-            const currentDay = getCurrentDay();
-            return days.includes(currentDay);
-        }
-
-        // Cargar objetivos diarios
-        async function loadDailyGoals() {
-            const container = document.getElementById('dailyGoalsContainer');
-            const todayString = getTodayString();
-            const todayGoals = dailyGoals.filter(goal => isDayActive(goal.dias));
-
-            if (todayGoals.length === 0) {
-                container.innerHTML = `
-                    <div class="glass-card">
-                        <div class="empty-state">
-                            <div class="empty-icon">📅</div>
-                            <p>No tienes objetivos diarios para hoy.</p>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = todayGoals.map(goal => {
-                const isCompleted = goal.completado[todayString] === true;
-                return `
-                    <div class="daily-goal-item ${isCompleted ? 'completed' : ''}" 
-                         onclick="openDailyGoalDetail('${goal.id}', '${goal.texto}', ${isCompleted})">
-                        <div class="daily-goal-icon ${isCompleted ? 'completed' : ''}">
-                            ${isCompleted ? '✅' : '📅'}
-                        </div>
-                        <div class="daily-goal-text">${goal.texto}</div>
-                        <div class="chevron">›</div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Cargar objetivos semanales
-        function loadWeeklyGoals() {
-            const container = document.getElementById('weeklyGoalsContainer');
-
-            if (weeklyGoals.length === 0) {
-                container.innerHTML = `
-                    <div class="glass-card">
-                        <div class="empty-state">
-                            <div class="empty-icon">📋</div>
-                            <p>No tienes objetivos semanales aún.</p>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = weeklyGoals.map(goal => {
-                const completedCount = goal.miniobjetivos.filter(mini => mini.completado).length;
-                const totalCount = goal.miniobjetivos.length;
-                const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
-
-                return `
-                    <div class="goal-item">
-                        <div class="goal-content">
-                            <div class="goal-indicator"></div>
-                            <div class="goal-text">${goal.texto}</div>
-                        </div>
-                        <div class="goal-progress">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: ${progressPercent}%"></div>
-                            </div>
-                            <div class="progress-text">${completedCount}/${totalCount} completados</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Modales
-        function openCreateDailyGoal() {
-            document.getElementById('createDailyGoalModal').style.display = 'block';
-        }
-
-        function openDailyGoalDetail(goalId, texto, isCompleted) {
-            currentGoalId = goalId;
-            document.getElementById('dailyGoalDetailText').textContent = texto;
-            document.getElementById('dailyGoalDetailModal').style.display = 'block';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-            currentGoalId = null;
-        }
-
-        // Funciones de objetivos diarios
-        function markDailyGoalCompleted() {
-            if (!currentGoalId) return;
-
-            const todayString = getTodayString();
-            const goal = dailyGoals.find(g => g.id === currentGoalId);
-            if (goal) {
-                goal.completado[todayString] = true;
-                showToast('¡Objetivo completado! 🎉');
-                loadDailyGoals();
-                closeModal('dailyGoalDetailModal');
-            }
-        }
-
-        function markDailyGoalFailed() {
-            if (!currentGoalId) return;
-
-            const todayString = getTodayString();
-            const goal = dailyGoals.find(g => g.id === currentGoalId);
-            if (goal) {
-                goal.completado[todayString] = false;
-                showToast('Objetivo marcado como fallido');
-                loadDailyGoals();
-                closeModal('dailyGoalDetailModal');
-            }
-        }
-
-        // Crear nuevo objetivo diario
-        document.getElementById('dailyGoalForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const texto = document.getElementById('dailyGoalText').value.trim();
-            const selectedDays = Array.from(document.querySelectorAll('input[name="days"]:checked'))
-                                     .map(checkbox => checkbox.value);
-
-            if (!texto || selectedDays.length === 0) {
-                showToast('Por favor completa todos los campos');
-                return;
-            }
-
-            const newGoal = {
-                id: Date.now().toString(),
-                texto: texto,
-                dias: selectedDays,
-                completado: {}
-            };
-
-            dailyGoals.push(newGoal);
-            loadDailyGoals();
-            closeModal('createDailyGoalModal');
-            document.getElementById('dailyGoalForm').reset();
-            
-            // Volver a marcar los días de semana por defecto
-            document.querySelectorAll('input[name="days"]').forEach((checkbox, index) => {
-                checkbox.checked = index < 5; // Lunes a Viernes
-            });
-
-            showToast('¡Objetivo diario creado exitosamente!');
-        });
-
-        // Otras funciones
-        function showDailyGoals() {
-            window.location.href = 'daily_objectives.html';
-        }
-
-        function openSettings() {
-            showToast('Función: Abrir configuración');
-            }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // Cerrar modales al hacer clic fuera
-        window.addEventListener('click', function(event) {
-            const modals = document.querySelectorAll('.modal');
-            modals.forEach(modal => {
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                    currentGoalId = null;
-                }
-            });
-        });
-
-        // Inicializar la aplicación
-        function initializeApp() {
-            loadDailyGoals();
-            loadWeeklyGoals();
-        }
-
-        // Función para cerrar sesión
-        function openSettings() {
-            if (confirm('¿Deseas cerrar sesión?')) {
-                window.auth.signOut().then(() => {
-                    window.location.href = '../auth/login.html';
-                }).catch((error) => {
-                    showToast('Error al cerrar sesión');
-                });
-            }
-        }
-
-        // Firebase Authentication State Changed ya está manejado en el script module
-        // Funciones adicionales para Firebase (cuando esté listo)
-        
-        // Cargar objetivos diarios desde Firebase
-        async function loadDailyGoalsFromFirebase() {
-            if (!window.auth.currentUser) return;
-            
+        // Funciones principales
+        async function loadNormalGoals(userId) {
             try {
-                const userId = window.auth.currentUser.uid;
-                const q = window.query(
-                    window.collection(window.db, 'usuarios', userId, 'objetivos_diarios'),
-                    window.orderBy('fecha', 'desc')
-                );
-                const querySnapshot = await window.getDocs(q);
-                
-                dailyGoals = [];
-                querySnapshot.forEach((doc) => {
-                    dailyGoals.push({
-                        id: doc.id,
-                        ...doc.data()
+                const goalsRef = collection(db, 'usuarios', userId, 'objetivos');
+                const querySnapshot = await getDocs(goalsRef);
+
+                if (querySnapshot.empty) {
+                    elements.normalGoalsContainer.innerHTML = `
+                        <div class="goal-card empty-state">
+                            No tienes objetivos aún. ¡Crea tu primer objetivo!
+                        </div>
+                    `;
+                    return;
+                }
+
+                elements.normalGoalsContainer.innerHTML = '';
+
+                for (const docSnapshot of querySnapshot.docs) {
+                    const data = docSnapshot.data();
+                    const goalId = docSnapshot.id;
+
+                    // Obtener miniobjetivos
+                    const miniGoalsRef = collection(db, 'usuarios', userId, 'objetivos', goalId, 'miniobjetivos');
+                    const miniQuerySnapshot = await getDocs(miniGoalsRef);
+                    const totalMiniGoals = miniQuerySnapshot.size;
+                    const completedMiniGoals = miniQuerySnapshot.docs.filter(d => d.data().completado).length;
+
+                    const progress = totalMiniGoals > 0 ? (completedMiniGoals / totalMiniGoals) * 100 : 0;
+
+                    createGoalCard(goalId, data, progress, completedMiniGoals, totalMiniGoals);
+                }
+            } catch (error) {
+                console.error('Error loading normal goals:', error);
+                elements.normalGoalsContainer.innerHTML = `
+                    <div class="goal-card">
+                        <div class="goal-text" style="color: #f44336;">Error al cargar objetivos. Intenta recargar la página.</div>
+                    </div>
+                `;
+            }
+        }
+
+        function createGoalCard(goalId, data, progress, completedMiniGoals, totalMiniGoals) {
+            const goalElement = document.createElement('div');
+            goalElement.className = 'goal-card';
+            goalElement.innerHTML = `
+                <div class="goal-text">${escapeHtml(data.texto)}</div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <div class="progress-text">${completedMiniGoals}/${totalMiniGoals} completados</div>
+                </div>
+                <div class="goal-actions">
+                    <button class="action-button delete" data-goal-id="${goalId}">
+                        <span class="material-icons">delete_outline</span>
+                        Eliminar
+                    </button>
+                    <button class="action-button" data-goal-id="${goalId}">
+                        <span class="material-icons">arrow_forward_ios</span>
+                        Detalles
+                    </button>
+                </div>
+            `;
+
+            // Event listeners
+            const deleteBtn = goalElement.querySelector('.delete');
+            const detailsBtn = goalElement.querySelector('.action-button:not(.delete)');
+
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showDeleteConfirmation(goalId);
+            });
+
+            detailsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showGoalDetails(goalId, data, totalMiniGoals, completedMiniGoals);
+            });
+
+            elements.normalGoalsContainer.appendChild(goalElement);
+        }
+
+        async function loadDailyGoals(userId) {
+            try {
+                const today = new Date();
+                const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+                const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+                const todayName = days[today.getDay()];
+
+                const goalsRef = collection(db, 'usuarios', userId, 'objetivos_diarios');
+                const q = query(goalsRef, where('dias', 'array-contains', todayName));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    elements.dailyGoalsContainer.innerHTML = `
+                        <div class="daily-goal empty-state">
+                            <span class="daily-goal-icon material-icons">calendar_today</span>
+                            <span class="daily-goal-text">No tienes objetivos diarios para hoy.</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                elements.dailyGoalsContainer.innerHTML = '';
+
+                querySnapshot.forEach((docSnapshot) => {
+                    const data = docSnapshot.data();
+                    const goalId = docSnapshot.id;
+                    const completed = data.completado && data.completado[todayStr];
+
+                    const goalElement = document.createElement('div');
+                    goalElement.className = 'daily-goal';
+                    goalElement.innerHTML = `
+                        <span class="daily-goal-icon material-icons" style="color: ${completed ? '#4CAF50' : '#667eea'}">
+                            ${completed ? 'check_circle' : 'calendar_today'}
+                        </span>
+                        <span class="daily-goal-text ${completed ? 'completed' : ''}">${escapeHtml(data.texto)}</span>
+                    `;
+
+                    goalElement.addEventListener('click', () => {
+                        showDailyGoalDialog(data.texto, goalId, completed);
                     });
+
+                    elements.dailyGoalsContainer.appendChild(goalElement);
                 });
-                
-                loadDailyGoals();
             } catch (error) {
                 console.error('Error loading daily goals:', error);
-                showToast('Error al cargar objetivos diarios');
+                elements.dailyGoalsContainer.innerHTML = `
+                    <div class="daily-goal">
+                        <span class="daily-goal-icon material-icons">error</span>
+                        <span class="daily-goal-text" style="color: #f44336;">Error al cargar objetivos diarios</span>
+                    </div>
+                `;
             }
         }
 
-        // Guardar objetivo diario en Firebase
-        async function saveDailyGoalToFirebase(goalData) {
-            if (!window.auth.currentUser) return;
-            
+        // Funciones de utilidad
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        // Funciones de modales
+        function showDeleteConfirmation(goalId) {
+            currentGoalId = goalId;
+            elements.deleteModal.style.display = 'block';
+        }
+
+        function showGoalDetails(goalId, goalData, totalMiniGoals, completedMiniGoals) {
+            currentGoalId = goalId;
+            const progress = totalMiniGoals > 0 ? Math.round((completedMiniGoals / totalMiniGoals) * 100) : 0;
+
+            const detailsBody = document.getElementById('detailsModalBody');
+            detailsBody.innerHTML = `
+                <p><strong>Objetivo:</strong> ${escapeHtml(goalData.texto)}</p>
+                <p><strong>Progreso:</strong> ${progress}% (${completedMiniGoals}/${totalMiniGoals} miniobjetivos completados)</p>
+                <p><strong>Fecha de creación:</strong> ${goalData.fecha ? new Date(goalData.fecha.seconds * 1000).toLocaleDateString() : 'No disponible'}</p>
+            `;
+
+            elements.detailsModal.style.display = 'block';
+        }
+
+        function showDailyGoalDialog(text, goalId, completed) {
+            currentDailyGoalId = goalId;
+            currentDailyGoalCompleted = completed;
+
+            const dailyGoalBody = document.getElementById('dailyGoalModalBody');
+            dailyGoalBody.innerHTML = `
+                <p><strong>Objetivo:</strong> ${escapeHtml(text)}</p>
+                <p><strong>Estado:</strong> ${completed ? 'Completado ✓' : 'Pendiente'}</p>
+                <p><strong>Fecha:</strong> ${new Date().toLocaleDateString()}</p>
+            `;
+
+            elements.toggleDailyGoal.textContent = completed ? 'Marcar como Pendiente' : 'Marcar como Completado';
+            elements.dailyGoalModal.style.display = 'block';
+        }
+
+        // Funciones de acciones
+        async function deleteGoal(goalId) {
             try {
-                const userId = window.auth.currentUser.uid;
-                const docRef = await window.addDoc(
-                    window.collection(window.db, 'usuarios', userId, 'objetivos_diarios'),
-                    {
-                        ...goalData,
-                        fecha: window.Timestamp.now(),
-                        userId: userId
-                    }
-                );
-                
-                return docRef.id;
+                await deleteDoc(doc(db, 'usuarios', currentUserId, 'objetivos', goalId));
+                await loadNormalGoals(currentUserId);
+                elements.deleteModal.style.display = 'none';
             } catch (error) {
-                console.error('Error saving daily goal:', error);
-                showToast('Error al guardar objetivo');
-                return null;
+                console.error('Error deleting goal:', error);
+                alert('Error al eliminar el objetivo. Intenta nuevamente.');
             }
         }
 
-        // Actualizar estado de objetivo diario en Firebase
-        async function updateDailyGoalInFirebase(goalId, updates) {
-            if (!window.auth.currentUser) return;
-            
+        async function toggleDailyGoalStatus() {
             try {
-                const userId = window.auth.currentUser.uid;
-                const goalRef = window.doc(window.db, 'usuarios', userId, 'objetivos_diarios', goalId);
-                await window.updateDoc(goalRef, updates);
-                return true;
+                const today = new Date();
+                const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+                const goalRef = doc(db, 'usuarios', currentUserId, 'objetivos_diarios', currentDailyGoalId);
+                const updateData = {};
+                updateData[`completado.${todayStr}`] = !currentDailyGoalCompleted;
+
+                await updateDoc(goalRef, updateData);
+                await loadDailyGoals(currentUserId);
+                elements.dailyGoalModal.style.display = 'none';
             } catch (error) {
                 console.error('Error updating daily goal:', error);
-                showToast('Error al actualizar objetivo');
-                return false;
+                alert('Error al actualizar el objetivo diario. Intenta nuevamente.');
             }
         }
 
-        // Modificar la función de crear objetivo para usar Firebase
-        document.getElementById('dailyGoalForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const texto = document.getElementById('dailyGoalText').value.trim();
-            const selectedDays = Array.from(document.querySelectorAll('input[name="days"]:checked'))
-                                     .map(checkbox => checkbox.value);
+        async function addNewGoal(userId, text) {
+            try {
+                const goalsRef = collection(db, 'usuarios', userId, 'objetivos');
+                await addDoc(goalsRef, {
+                    texto: text,
+                    completado: false,
+                    fecha: new Date()
+                });
 
-            if (!texto || selectedDays.length === 0) {
-                showToast('Por favor completa todos los campos');
+                await loadNormalGoals(userId);
+            } catch (error) {
+                console.error('Error adding goal:', error);
+                alert('Error al agregar el objetivo. Intenta nuevamente.');
+            }
+        }
+
+        // Event listeners
+        function setupEventListeners() {
+            // Menú de usuario
+            elements.userAvatar.addEventListener('click', (e) => {
+                e.stopPropagation();
+                elements.userDropdown.classList.toggle('show');
+            });
+
+            elements.logoutBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                try {
+                    await signOut(auth);
+                    window.location.href = '../auth/login.html';
+                } catch (error) {
+                    console.error('Error al cerrar sesión:', error);
+                    alert('Ocurrió un error al cerrar sesión');
+                }
+            });
+
+            // Botones principales
+            elements.addGoalBtn.addEventListener('click', () => {
+                const goalText = prompt('Escribe tu nuevo objetivo:');
+                if (goalText && goalText.trim() !== '') {
+                    addNewGoal(currentUserId, goalText.trim());
+                }
+            });
+
+            elements.addDailyGoalBtn.addEventListener('click', () => {
+                window.location.href = 'crear_objetivo_diario.html';
+            });
+
+            elements.viewDailyGoalsBtn.addEventListener('click', () => {
+                if (!currentUserId) {
+                    alert('Debes iniciar sesión para ver tus objetivos');
+                    return;
+                }
+                window.location.href = 'daily_goals.html';
+            });
+
+            // Modales
+            elements.cancelDelete.addEventListener('click', () => {
+                elements.deleteModal.style.display = 'none';
+            });
+
+            elements.confirmDelete.addEventListener('click', () => {
+                if (currentGoalId) {
+                    deleteGoal(currentGoalId);
+                }
+            });
+
+            elements.closeDetails.addEventListener('click', () => {
+                elements.detailsModal.style.display = 'none';
+            });
+
+            elements.manageMiniGoals.addEventListener('click', () => {
+                elements.detailsModal.style.display = 'none';
+                window.location.href = `minigoals.html?goalId=${currentGoalId}`;
+            });
+
+            elements.closeDailyGoal.addEventListener('click', () => {
+                elements.dailyGoalModal.style.display = 'none';
+            });
+
+            elements.toggleDailyGoal.addEventListener('click', () => {
+                toggleDailyGoalStatus();
+            });
+
+            // Cerrar modales y menús al hacer clic fuera
+            window.addEventListener('click', (e) => {
+                if (e.target === elements.deleteModal) {
+                    elements.deleteModal.style.display = 'none';
+                }
+                if (e.target === elements.detailsModal) {
+                    elements.detailsModal.style.display = 'none';
+                }
+                if (e.target === elements.dailyGoalModal) {
+                    elements.dailyGoalModal.style.display = 'none';
+                }
+                if (elements.userDropdown.classList.contains('show')) {
+                    elements.userDropdown.classList.remove('show');
+                }
+            });
+        }
+
+        // Inicialización
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
                 return;
             }
 
-            const newGoalData = {
-                texto: texto,
-                dias: selectedDays,
-                completado: {}
-            };
+            currentUserId = user.uid;
 
-            // Intentar guardar en Firebase primero
-            const firebaseId = await saveDailyGoalToFirebase(newGoalData);
-            
-            if (firebaseId) {
-                newGoalData.id = firebaseId;
-            } else {
-                // Fallback a almacenamiento local
-                newGoalData.id = Date.now().toString();
-            }
+            // Actualizar avatar
+            elements.userAvatar.textContent = user.email ? user.email.charAt(0).toUpperCase() : 'U';
 
-            dailyGoals.push(newGoalData);
-            loadDailyGoals();
-            closeModal('createDailyGoalModal');
-            document.getElementById('dailyGoalForm').reset();
-            
-            // Volver a marcar los días de semana por defecto
-            document.querySelectorAll('input[name="days"]').forEach((checkbox, index) => {
-                checkbox.checked = index < 5; // Lunes a Viernes
-            });
-
-            showToast('¡Objetivo diario creado exitosamente!');
+            // Cargar datos
+            await Promise.all([
+                loadNormalGoals(user.uid),
+                loadDailyGoals(user.uid)
+            ]);
         });
 
-        // Modificar las funciones de marcar completado/fallido para usar Firebase
-        async function markDailyGoalCompleted() {
-            if (!currentGoalId) return;
-
-            const todayString = getTodayString();
-            const goal = dailyGoals.find(g => g.id === currentGoalId);
-            if (!goal) return;
-
-            goal.completado[todayString] = true;
-            
-            // Actualizar en Firebase
-            const updates = { [`completado.${todayString}`]: true };
-            await updateDailyGoalInFirebase(currentGoalId, updates);
-            
-            showToast('¡Objetivo completado! 🎉');
-            loadDailyGoals();
-            closeModal('dailyGoalDetailModal');
-        }
-
-        async function markDailyGoalFailed() {
-            if (!currentGoalId) return;
-
-            const todayString = getTodayString();
-            const goal = dailyGoals.find(g => g.id === currentGoalId);
-            if (!goal) return;
-
-            goal.completado[todayString] = false;
-            
-            // Actualizar en Firebase
-            const updates = { [`completado.${todayString}`]: false };
-            await updateDailyGoalInFirebase(currentGoalId, updates);
-            
-            showToast('Objetivo marcado como fallido');
-            loadDailyGoals();
-            closeModal('dailyGoalDetailModal');
-        }
-
-        // CSS faltante para el toast
-        const toastStyles = `
-            .toast {
-                position: fixed;
-                bottom: 100px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: rgba(0, 0, 0, 0.8);
-                color: white;
-                padding: 12px 24px;
-                border-radius: 25px;
-                font-size: 14px;
-                z-index: 10000;
-                opacity: 0;
-                transition: all 0.3s ease;
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-            }
-
-            .toast.show {
-                opacity: 1;
-                transform: translateX(-50%) translateY(-10px);
-            }
-
-            .glass-card {
-                background: rgba(255, 255, 255, 0.15);
-                backdrop-filter: blur(10px);
-                border-radius: 20px;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                padding: 20px;
-                margin-bottom: 20px;
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            }
-
-            .section-header {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                margin-bottom: 20px;
-            }
-
-            .section-icon {
-                font-size: 24px;
-            }
-
-            .section-title {
-                font-size: 20px;
-                font-weight: 600;
-                color: white;
-            }
-
-            .daily-goal-item {
-                background: rgba(255, 255, 255, 0.1);
-                border-radius: 16px;
-                padding: 16px;
-                margin-bottom: 12px;
-                display: flex;
-                align-items: center;
-                gap: 16px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                border: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .daily-goal-item:hover {
-                background: rgba(255, 255, 255, 0.2);
-                transform: translateY(-2px);
-            }
-
-            .daily-goal-item.completed {
-                background: rgba(76, 175, 80, 0.2);
-                border-color: rgba(76, 175, 80, 0.3);
-            }
-
-            .daily-goal-icon {
-                font-size: 20px;
-                width: 24px;
-                text-align: center;
-            }
-
-            .daily-goal-text {
-                flex: 1;
-                font-size: 16px;
-                color: white;
-            }
-
-            .chevron {
-                font-size: 20px;
-                color: rgba(255, 255, 255, 0.6);
-            }
-
-            .goal-item {
-                background: rgba(255, 255, 255, 0.1);
-                border-radius: 16px;
-                padding: 16px;
-                margin-bottom: 12px;
-                border: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .goal-content {
-                display: flex;
-                align-items: flex-start;
-                gap: 12px;
-                margin-bottom: 12px;
-            }
-
-            .goal-indicator {
-                width: 8px;
-                height: 8px;
-                background: #4CAF50;
-                border-radius: 50%;
-                margin-top: 6px;
-            }
-
-            .goal-text {
-                flex: 1;
-                font-size: 16px;
-                color: white;
-                line-height: 1.4;
-            }
-
-            .goal-progress {
-                margin-left: 20px;
-            }
-
-            .progress-bar {
-                width: 100%;
-                height: 6px;
-                background: rgba(255, 255, 255, 0.2);
-                border-radius: 3px;
-                overflow: hidden;
-                margin-bottom: 8px;
-            }
-
-            .progress-fill {
-                height: 100%;
-                background: linear-gradient(90deg, #4CAF50, #81C784);
-                border-radius: 3px;
-                transition: width 0.3s ease;
-            }
-
-            .progress-text {
-                font-size: 12px;
-                color: rgba(255, 255, 255, 0.7);
-            }
-
-            .empty-state {
-                text-align: center;
-                padding: 40px 20px;
-            }
-
-            .empty-icon {
-                font-size: 48px;
-                margin-bottom: 16px;
-                opacity: 0.6;
-            }
-
-            .empty-state p {
-                color: rgba(255, 255, 255, 0.7);
-                font-size: 16px;
-            }
-
-            .fab-container {
-                position: fixed;
-                bottom: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                display: flex;
-                gap: 12px;
-                z-index: 1000;
-            }
-
-            .fab {
-                background: linear-gradient(45deg, #667eea, #764ba2);
-                border: none;
-                border-radius: 25px;
-                padding: 12px 20px;
-                color: white;
-                font-size: 14px;
-                font-weight: 600;
-                cursor: pointer;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-                transition: all 0.3s ease;
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-            }
-
-            .fab:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            }
-
-            .fab.secondary {
-                background: rgba(255, 255, 255, 0.2);
-            }
-
-            .modal {
-                display: none;
-                position: fixed;
-                z-index: 10000;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.7);
-                backdrop-filter: blur(5px);
-            }
-
-            .modal-content {
-                background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-                margin: 10% auto;
-                padding: 0;
-                border-radius: 20px;
-                max-width: 400px;
-                backdrop-filter: blur(20px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-                overflow: hidden;
-            }
-
-            .modal-header {
-                padding: 24px;
-                text-align: center;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .modal-icon {
-                font-size: 48px;
-                margin-bottom: 12px;
-            }
-
-            .modal-title {
-                font-size: 24px;
-                font-weight: 600;
-                color: white;
-                margin-bottom: 8px;
-            }
-
-            .modal-subtitle {
-                font-size: 16px;
-                color: rgba(255, 255, 255, 0.8);
-                line-height: 1.4;
-            }
-
-            .form-group {
-                margin-bottom: 20px;
-            }
-
-            .form-input {
-                width: 100%;
-                padding: 16px;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                border-radius: 12px;
-                background: rgba(255, 255, 255, 0.1);
-                color: white;
-                font-size: 16px;
-                backdrop-filter: blur(10px);
-            }
-
-            .form-input::placeholder {
-                color: rgba(255, 255, 255, 0.6);
-            }
-
-            .form-input:focus {
-                outline: none;
-                border-color: rgba(255, 255, 255, 0.4);
-                background: rgba(255, 255, 255, 0.15);
-            }
-
-            .button-group {
-                display: flex;
-                gap: 12px;
-                padding: 24px;
-            }
-
-            .btn {
-                flex: 1;
-                padding: 14px 20px;
-                border: none;
-                border-radius: 12px;
-                font-size: 16px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-
-            .btn-primary {
-                background: linear-gradient(45deg, #667eea, #764ba2);
-                color: white;
-            }
-
-            .btn-secondary {
-                background: rgba(255, 255, 255, 0.2);
-                color: white;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-            }
-
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            }
-
-            input[type="checkbox"] {
-                accent-color: #667eea;
-                width: 18px;
-                height: 18px;
-            }
-
-            label {
-                color: rgba(255, 255, 255, 0.9);
-                font-size: 14px;
-            }
-        `;
-
-        // Agregar estilos al documento
-        const styleSheet = document.createElement('style');
-        styleSheet.textContent = toastStyles;
-        document.head.appendChild(styleSheet);
-
-        // Llamar a la inicialización cuando el DOM esté listo
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeApp);
-        } else {
-            initializeApp();
-        }
+        // Configurar event listeners
+        setupEventListeners();
     </script>
 </body>
+
 </html>
