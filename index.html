@@ -27,13 +27,6 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Check if user is already logged in and redirect
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // User is signed in, redirect to app
-                window.location.href = 'app/index.html'; // o donde tengas tu Flutter Web
-            }
-        });
 
         // Make auth available globally for buttons
         window.authInstance = auth;
