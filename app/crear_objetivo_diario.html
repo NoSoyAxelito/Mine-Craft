@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Craft - Crear Objetivo Diario</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #333;
+    min-height: 100vh;
+}
+
+.app-bar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.app-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    pointer-events: none;
+}
+
+.app-title {
+    font-size: 22px;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.back-button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1;
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.container {
+    padding: 24px 16px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 
+        0 10px 40px rgba(0,0,0,0.1),
+        0 2px 8px rgba(0,0,0,0.05);
+    margin-top: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+.form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.form-group {
+    margin-bottom: 28px;
+    position: relative;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #444;
+    font-size: 16px;
+    position: relative;
+}
+
+.form-label::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 1px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid #e8e8e8;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: white;
+    position: relative;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 
+        0 0 0 4px rgba(102, 126, 234, 0.1),
+        0 4px 12px rgba(102, 126, 234, 0.15);
+    transform: translateY(-2px);
+}
+
+.form-textarea {
+    min-height: 120px;
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+.days-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.day-checkbox {
+    display: none;
+}
+
+.day-label {
+    display: inline-block;
+    padding: 12px 20px;
+    background: white;
+    border: 2px solid #e8e8e8;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.day-label::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transition: left 0.3s ease;
+    z-index: -1;
+}
+
+.day-label:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: #667eea;
+}
+
+.day-checkbox:checked + .day-label {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.day-checkbox:checked + .day-label::before {
+    left: 0;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.submit-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transition: left 0.3s ease;
+    z-index: 1;
+}
+
+.submit-button:hover::before {
+    left: 0;
+}
+
+.submit-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+}
+
+.submit-button span,
+.submit-button .spinner {
+    position: relative;
+    z-index: 2;
+}
+
+.submit-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.submit-button:disabled::before {
+    display: none;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error-message {
+    color: #e53e3e;
+    font-size: 14px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: rgba(229, 62, 62, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid #e53e3e;
+}
+
+/* Animaciones adicionales */
+.form-container {
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive improvements */
+@media (max-width: 600px) {
+    .form-container {
+        padding: 24px 20px;
+        margin: 12px;
+        border-radius: 16px;
+    }
+    
+    .days-container {
+        gap: 8px;
+    }
+    
+    .day-label {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+    
+    .app-title {
+        font-size: 18px;
+    }
+    
+    .back-button {
+        padding: 6px 10px;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="app-bar">
+        <button class="back-button" id="backButton">
+            <span class="material-icons">arrow_back</span>
+            <span>Volver</span>
+        </button>
+        <div class="app-title">Crear Objetivo Diario</div>
+        <div style="width: 72px;"></div> <!-- Espacio para equilibrar -->
+    </div>
+
+    <div class="container">
+        <div class="form-container">
+            <form id="dailyGoalForm">
+                <div class="form-group">
+                    <label for="goalText" class="form-label">Descripción del objetivo</label>
+                    <textarea 
+                        id="goalText" 
+                        class="form-input form-textarea" 
+                        placeholder="Ej: Hacer 30 minutos de ejercicio"
+                        required
+                    ></textarea>
+                    <div id="textError" class="error-message" style="display: none;">
+                        <span class="material-icons" style="font-size: 18px;">error</span>
+                        <span id="textErrorText"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Días de la semana</label>
+                    <div class="days-container">
+                        <input type="checkbox" id="monday" class="day-checkbox" name="days" value="Lunes">
+                        <label for="monday" class="day-label">Lunes</label>
+
+                        <input type="checkbox" id="tuesday" class="day-checkbox" name="days" value="Martes">
+                        <label for="tuesday" class="day-label">Martes</label>
+
+                        <input type="checkbox" id="wednesday" class="day-checkbox" name="days" value="Miércoles">
+                        <label for="wednesday" class="day-label">Miércoles</label>
+
+                        <input type="checkbox" id="thursday" class="day-checkbox" name="days" value="Jueves">
+                        <label for="thursday" class="day-label">Jueves</label>
+
+                        <input type="checkbox" id="friday" class="day-checkbox" name="days" value="Viernes">
+                        <label for="friday" class="day-label">Viernes</label>
+
+                        <input type="checkbox" id="saturday" class="day-checkbox" name="days" value="Sábado">
+                        <label for="saturday" class="day-label">Sábado</label>
+
+                        <input type="checkbox" id="sunday" class="day-checkbox" name="days" value="Domingo">
+                        <label for="sunday" class="day-label">Domingo</label>
+                    </div>
+                    <div id="daysError" class="error-message" style="display: none;">
+                        <span class="material-icons" style="font-size: 18px;">error</span>
+                        <span>Selecciona al menos un día</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-button" id="submitButton">
+                    <span id="buttonText">Crear Objetivo</span>
+                    <div id="buttonSpinner" class="spinner" style="display: none;"></div>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBEiNm3PiUYbKqb-vllnwfhQw2rIAumy5Y",
+            authDomain: "balatrobase-e14a5.firebaseapp.com",
+            projectId: "balatrobase-e14a5",
+            storageBucket: "balatrobase-e14a5.appspot.com",
+            messagingSenderId: "828687429765",
+            appId: "1:828687429765:web:c09239689b1107fad2b9ec",
+            measurementId: "G-4VN4XPBGEL"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // DOM elements
+        const backButton = document.getElementById('backButton');
+        const dailyGoalForm = document.getElementById('dailyGoalForm');
+        const goalText = document.getElementById('goalText');
+        const submitButton = document.getElementById('submitButton');
+        const buttonText = document.getElementById('buttonText');
+        const buttonSpinner = document.getElementById('buttonSpinner');
+        const textError = document.getElementById('textError');
+        const daysError = document.getElementById('daysError');
+
+        // Navegación
+        backButton.addEventListener('click', () => {
+            window.history.back();
+        });
+
+        // Validación del formulario
+        dailyGoalForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Validar campos
+            const text = goalText.value.trim();
+            const selectedDays = Array.from(document.querySelectorAll('input[name="days"]:checked')).map(el => el.value);
+            
+            let isValid = true;
+            
+            // Validar texto
+            if (text === '') {
+                document.getElementById('textErrorText').textContent = 'Ingresa una descripción para el objetivo';
+                textError.style.display = 'flex';
+                isValid = false;
+            } else if (text.length > 100) {
+                document.getElementById('textErrorText').textContent = 'Máximo 100 caracteres';
+                textError.style.display = 'flex';
+                isValid = false;
+            } else {
+                textError.style.display = 'none';
+            }
+            
+            // Validar días seleccionados
+            if (selectedDays.length === 0) {
+                daysError.style.display = 'flex';
+                isValid = false;
+            } else {
+                daysError.style.display = 'none';
+            }
+            
+            if (!isValid) return;
+            
+            // Crear objetivo
+            await createDailyGoal(text, selectedDays);
+        });
+
+        async function createDailyGoal(text, days) {
+            const user = auth.currentUser;
+            if (!user) {
+                alert('Debes iniciar sesión para crear objetivos');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                // Mostrar estado de carga
+                buttonText.style.display = 'none';
+                buttonSpinner.style.display = 'block';
+                submitButton.disabled = true;
+                
+                // Crear el objetivo en Firestore
+                const goalsRef = collection(db, 'usuarios', user.uid, 'objetivos_diarios');
+                await addDoc(goalsRef, {
+                    texto: text,
+                    dias: days,
+                    completado: {}, // Objeto vacío para registrar días completados
+                    fechaCreacion: new Date()
+                });
+                
+                // Redirigir a la página de objetivos diarios
+                window.location.href = 'daily_goals.html';
+                
+            } catch (error) {
+                console.error('Error creating daily goal:', error);
+                alert('Ocurrió un error al crear el objetivo. Intenta nuevamente.');
+                
+                // Restablecer botón
+                buttonText.style.display = 'block';
+                buttonSpinner.style.display = 'none';
+                submitButton.disabled = false;
+            }
+        }
+
+        // Verificar autenticación al cargar la página
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html>

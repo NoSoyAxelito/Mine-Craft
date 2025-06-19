@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Craft - Miniobjetivos</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #333;
+    min-height: 100vh;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.app-bar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.app-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.back-button {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.app-title {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #764ba2;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.user-avatar:hover {
+    transform: scale(1.05);
+}
+
+.container {
+    padding: 24px 16px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.goal-info {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        0 1px 0px rgba(255, 255, 255, 0.5) inset;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.goal-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.goal-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #2d3748;
+    line-height: 1.4;
+}
+
+.progress-container {
+    margin-bottom: 12px;
+}
+
+.progress-bar {
+    height: 12px;
+    background: rgba(224, 224, 224, 0.5);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.progress-text {
+    font-size: 14px;
+    color: #718096;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+.section-title {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 16px 20px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    font-size: 18px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.add-mini-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.add-mini-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.add-mini-btn:active {
+    transform: translateY(0);
+}
+
+.minigoal-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.minigoal-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.minigoal-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.minigoal-card:hover::before {
+    opacity: 1;
+}
+
+.minigoal-checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.minigoal-checkbox.completed {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.minigoal-checkbox:hover {
+    background: rgba(102, 126, 234, 0.1);
+    transform: scale(1.1);
+}
+
+.minigoal-checkbox.completed:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+.minigoal-text {
+    flex: 1;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.5;
+    transition: all 0.3s ease;
+    color: #2d3748;
+}
+
+.minigoal-text.completed {
+    text-decoration: line-through;
+    color: #a0aec0;
+    opacity: 0.7;
+}
+
+.minigoal-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.action-button {
+    background: rgba(102, 126, 234, 0.1);
+    border: none;
+    color: #667eea;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 13px;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+}
+
+.action-button:hover {
+    background: rgba(102, 126, 234, 0.2);
+    transform: translateY(-1px);
+}
+
+.action-button.delete {
+    background: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+}
+
+.action-button.delete:hover {
+    background: rgba(244, 67, 54, 0.2);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #718096;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.empty-state-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    color: #cbd5e0;
+    opacity: 0.7;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    margin: 10% auto;
+    padding: 32px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 480px;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.2),
+        0 1px 0px rgba(255, 255, 255, 0.5) inset;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #2d3748;
+}
+
+.modal-body {
+    margin-bottom: 24px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid rgba(224, 224, 224, 0.5);
+    border-radius: 12px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.input-field:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.modal-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+}
+
+.modal-button-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.modal-button-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.modal-button-secondary {
+    background: rgba(224, 224, 224, 0.5);
+    color: #4a5568;
+    backdrop-filter: blur(10px);
+}
+
+.modal-button-secondary:hover {
+    background: rgba(224, 224, 224, 0.7);
+    transform: translateY(-1px);
+}
+
+.modal-button-danger {
+    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
+.modal-button-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(244, 67, 54, 0.4);
+}
+
+.loading {
+    text-align: center;
+    padding: 32px;
+    color: #718096;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 16px 12px;
+    }
+    
+    .modal-content {
+        margin: 15% auto;
+        padding: 24px;
+        width: 95%;
+    }
+    
+    .minigoal-card {
+        padding: 16px;
+        gap: 12px;
+    }
+    
+    .minigoal-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .action-button {
+        justify-content: center;
+        padding: 10px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        color: #e2e8f0;
+    }
+    
+    .goal-info,
+    .section-title,
+    .minigoal-card {
+        background: rgba(45, 55, 72, 0.9);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .goal-title,
+    .minigoal-text {
+        color: #e2e8f0;
+    }
+    
+    .modal-content {
+        background: rgba(45, 55, 72, 0.95);
+    }
+    
+    .input-field {
+        background: rgba(26, 32, 44, 0.8);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #e2e8f0;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <div class="app-bar">
+        <div class="app-bar-left">
+            <button class="back-button" id="backBtn">
+                <span class="material-icons">arrow_back</span>
+            </button>
+            <div class="app-title">Miniobjetivos</div>
+        </div>
+        <div class="user-avatar" id="userAvatar">U</div>
+    </div>
+
+    <div class="container">
+        <div class="goal-info" id="goalInfo">
+            <div class="loading">Cargando información del objetivo...</div>
+        </div>
+
+        <div class="section-title">
+            <span>Miniobjetivos</span>
+            <button class="add-mini-btn" id="addMiniGoalBtn">
+                <span class="material-icons" style="font-size: 16px;">add</span>
+                <span>Agregar</span>
+            </button>
+        </div>
+
+        <div id="miniGoalsContainer">
+            <div class="loading">Cargando miniobjetivos...</div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar miniobjetivo -->
+    <div id="addMiniGoalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Nuevo Miniobjetivo</div>
+            <div class="modal-body">
+                <input type="text" class="input-field" id="miniGoalText" placeholder="Describe tu miniobjetivo...">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button modal-button-secondary" id="cancelAddMiniGoal">Cancelar</button>
+                <button class="modal-button modal-button-primary" id="confirmAddMiniGoal">Agregar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar eliminación -->
+    <div id="deleteMiniGoalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Confirmar eliminación</div>
+            <div class="modal-body">
+                ¿Estás seguro de que quieres eliminar este miniobjetivo?
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button modal-button-secondary" id="cancelDeleteMiniGoal">Cancelar</button>
+                <button class="modal-button modal-button-danger" id="confirmDeleteMiniGoal">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar miniobjetivo -->
+    <div id="editMiniGoalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Editar Miniobjetivo</div>
+            <div class="modal-body">
+                <input type="text" class="input-field" id="editMiniGoalText" placeholder="Edita tu miniobjetivo...">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button modal-button-secondary" id="cancelEditMiniGoal">Cancelar</button>
+                <button class="modal-button modal-button-primary" id="confirmEditMiniGoal">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+        import { getFirestore, collection, query, getDocs, addDoc, doc, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBEiNm3PiUYbKqb-vllnwfhQw2rIAumy5Y",
+            authDomain: "balatrobase-e14a5.firebaseapp.com",
+            projectId: "balatrobase-e14a5",
+            storageBucket: "balatrobase-e14a5.appspot.com",
+            messagingSenderId: "828687429765",
+            appId: "1:828687429765:web:c09239689b1107fad2b9ec",
+            measurementId: "G-4VN4XPBGEL"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // DOM elements
+        const userAvatar = document.getElementById('userAvatar');
+        const backBtn = document.getElementById('backBtn');
+        const goalInfo = document.getElementById('goalInfo');
+        const miniGoalsContainer = document.getElementById('miniGoalsContainer');
+        const addMiniGoalBtn = document.getElementById('addMiniGoalBtn');
+
+        // Modal elements
+        const addMiniGoalModal = document.getElementById('addMiniGoalModal');
+        const deleteMiniGoalModal = document.getElementById('deleteMiniGoalModal');
+        const editMiniGoalModal = document.getElementById('editMiniGoalModal');
+        const miniGoalText = document.getElementById('miniGoalText');
+        const editMiniGoalText = document.getElementById('editMiniGoalText');
+        const cancelAddMiniGoal = document.getElementById('cancelAddMiniGoal');
+        const confirmAddMiniGoal = document.getElementById('confirmAddMiniGoal');
+        const cancelDeleteMiniGoal = document.getElementById('cancelDeleteMiniGoal');
+        const confirmDeleteMiniGoal = document.getElementById('confirmDeleteMiniGoal');
+        const cancelEditMiniGoal = document.getElementById('cancelEditMiniGoal');
+        const confirmEditMiniGoal = document.getElementById('confirmEditMiniGoal');
+
+        // Variables globales
+        let currentUserId = null;
+        let currentGoalId = null;
+        let currentMiniGoalId = null;
+        let goalData = null;
+
+        // Obtener goalId de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        currentGoalId = urlParams.get('goalId');
+
+        if (!currentGoalId) {
+            alert('ID de objetivo no válido');
+            window.location.href = 'home_page.html';
+        }
+
+        // Event listeners
+        backBtn.addEventListener('click', () => {
+            window.location.href = 'home_page.html';
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            currentUserId = user.uid;
+            userAvatar.textContent = user.email ? user.email.charAt(0).toUpperCase() : 'U';
+
+            await loadGoalInfo();
+            await loadMiniGoals();
+        });
+
+        async function loadGoalInfo() {
+            try {
+                const goalRef = doc(db, 'usuarios', currentUserId, 'objetivos', currentGoalId);
+                const goalSnap = await getDoc(goalRef);
+
+                if (!goalSnap.exists()) {
+                    alert('Objetivo no encontrado');
+                    window.location.href = 'home_page.html';
+                    return;
+                }
+
+                goalData = goalSnap.data();
+                updateGoalInfoUI();
+            } catch (error) {
+                console.error('Error loading goal info:', error);
+                goalInfo.innerHTML = '<div class="loading">Error al cargar la información del objetivo</div>';
+            }
+        }
+
+        async function loadMiniGoals() {
+            try {
+                const miniGoalsRef = collection(db, 'usuarios', currentUserId, 'objetivos', currentGoalId, 'miniobjetivos');
+                const querySnapshot = await getDocs(miniGoalsRef);
+
+                if (querySnapshot.empty) {
+                    miniGoalsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon material-icons">assignment_turned_in</div>
+                            <p>No tienes miniobjetivos aún.</p>
+                            <p>¡Crea tu primer miniobjetivo para comenzar!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                miniGoalsContainer.innerHTML = '';
+                const miniGoals = [];
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    miniGoals.push({
+                        id: doc.id,
+                        ...data
+                    });
+                });
+
+                // Ordenar: no completados primero
+                miniGoals.sort((a, b) => {
+                    if (a.completado === b.completado) return 0;
+                    return a.completado ? 1 : -1;
+                });
+
+                miniGoals.forEach(miniGoal => {
+                    createMiniGoalElement(miniGoal);
+                });
+
+                updateGoalInfoUI();
+            } catch (error) {
+                console.error('Error loading mini goals:', error);
+                miniGoalsContainer.innerHTML = '<div class="loading">Error al cargar los miniobjetivos</div>';
+            }
+        }
+
+        function createMiniGoalElement(miniGoal) {
+            const miniGoalElement = document.createElement('div');
+            miniGoalElement.className = 'minigoal-card';
+            miniGoalElement.innerHTML = `
+                <div class="minigoal-checkbox ${miniGoal.completado ? 'completed' : ''}" data-id="${miniGoal.id}">
+                    ${miniGoal.completado ? '<span class="material-icons" style="font-size: 16px;">check</span>' : ''}
+                </div>
+                <div class="minigoal-text ${miniGoal.completado ? 'completed' : ''}">${miniGoal.texto}</div>
+                <div class="minigoal-actions">
+                    <button class="action-button" data-id="${miniGoal.id}" data-action="edit">
+                        <span class="material-icons" style="font-size: 16px;">edit</span>
+                        Editar
+                    </button>
+                    <button class="action-button delete" data-id="${miniGoal.id}" data-action="delete">
+                        <span class="material-icons" style="font-size: 16px;">delete</span>
+                        Eliminar
+                    </button>
+                </div>
+            `;
+
+            // Event listeners
+            const checkbox = miniGoalElement.querySelector('.minigoal-checkbox');
+            const editBtn = miniGoalElement.querySelector('[data-action="edit"]');
+            const deleteBtn = miniGoalElement.querySelector('[data-action="delete"]');
+
+            checkbox.addEventListener('click', () => {
+                toggleMiniGoalCompletion(miniGoal.id, !miniGoal.completado);
+            });
+
+            editBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showEditMiniGoalModal(miniGoal.id, miniGoal.texto);
+            });
+
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showDeleteMiniGoalModal(miniGoal.id);
+            });
+
+            miniGoalsContainer.appendChild(miniGoalElement);
+        }
+
+        function updateGoalInfoUI() {
+            if (!goalData) return;
+
+            const miniGoalElements = miniGoalsContainer.querySelectorAll('.minigoal-card');
+            const totalMiniGoals = miniGoalElements.length;
+            const completedMiniGoals = miniGoalsContainer.querySelectorAll('.minigoal-checkbox.completed').length;
+            const progress = totalMiniGoals > 0 ? (completedMiniGoals / totalMiniGoals) * 100 : 0;
+
+            goalInfo.innerHTML = `
+                <div class="goal-title">${goalData.texto}</div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                    <div class="progress-text">${completedMiniGoals}/${totalMiniGoals} miniobjetivos completados (${Math.round(progress)}%)</div>
+                </div>
+            `;
+        }
+
+        async function toggleMiniGoalCompletion(miniGoalId, completed) {
+            try {
+                const miniGoalRef = doc(db, 'usuarios', currentUserId, 'objetivos', currentGoalId, 'miniobjetivos', miniGoalId);
+                await updateDoc(miniGoalRef, {
+                    completado: completed
+                });
+
+                await loadMiniGoals();
+            } catch (error) {
+                console.error('Error updating mini goal:', error);
+                alert('Error al actualizar el miniobjetivo');
+            }
+        }
+
+        async function addMiniGoal(text) {
+            try {
+                const miniGoalsRef = collection(db, 'usuarios', currentUserId, 'objetivos', currentGoalId, 'miniobjetivos');
+                await addDoc(miniGoalsRef, {
+                    texto: text,
+                    completado: false,
+                    fecha: new Date()
+                });
+
+                await loadMiniGoals();
+                addMiniGoalModal.style.display = 'none';
+                miniGoalText.value = '';
+            } catch (error) {
+                console.error('Error adding mini goal:', error);
+                alert('Error al agregar el miniobjetivo');
+            }
+        }
+
+        async function editMiniGoal(miniGoalId, newText) {
+            try {
+                const miniGoalRef = doc(db, 'usuarios', currentUserId, 'objetivos', currentGoalId, 'miniobjetivos', miniGoalId);
+                await updateDoc(miniGoalRef, {
+                    texto: newText
+                });
+
+                await loadMiniGoals();
+                editMiniGoalModal.style.display = 'none';
+            } catch (error) {
+                console.error('Error editing mini goal:', error);
+                alert('Error al editar el miniobjetivo');
+            }
+        }
+
+        async function deleteMiniGoal(miniGoalId) {
+            try {
+                const miniGoalRef = doc(db, 'usuarios', currentUserId, 'objetivos', currentGoalId, 'miniobjetivos', miniGoalId);
+                await deleteDoc(miniGoalRef);
+
+                await loadMiniGoals();
+                deleteMiniGoalModal.style.display = 'none';
+            } catch (error) {
+                console.error('Error deleting mini goal:', error);
+                alert('Error al eliminar el miniobjetivo');
+            }
+        }
+
+        function showEditMiniGoalModal(miniGoalId, currentText) {
+            currentMiniGoalId = miniGoalId;
+            editMiniGoalText.value = currentText;
+            editMiniGoalModal.style.display = 'block';
+            editMiniGoalText.focus();
+        }
+
+        function showDeleteMiniGoalModal(miniGoalId) {
+            currentMiniGoalId = miniGoalId;
+            deleteMiniGoalModal.style.display = 'block';
+        }
+
+        // Event listeners para modales
+        addMiniGoalBtn.addEventListener('click', () => {
+            addMiniGoalModal.style.display = 'block';
+            miniGoalText.focus();
+        });
+
+        cancelAddMiniGoal.addEventListener('click', () => {
+            addMiniGoalModal.style.display = 'none';
+            miniGoalText.value = '';
+        });
+
+        confirmAddMiniGoal.addEventListener('click', () => {
+            const text = miniGoalText.value.trim();
+            if (text) {
+                addMiniGoal(text);
+            }
+        });
+
+        cancelDeleteMiniGoal.addEventListener('click', () => {
+            deleteMiniGoalModal.style.display = 'none';
+        });
+
+        confirmDeleteMiniGoal.addEventListener('click', () => {
+            if (currentMiniGoalId) {
+                deleteMiniGoal(currentMiniGoalId);
+            }
+        });
+
+        cancelEditMiniGoal.addEventListener('click', () => {
+            editMiniGoalModal.style.display = 'none';
+        });
+
+        confirmEditMiniGoal.addEventListener('click', () => {
+            const text = editMiniGoalText.value.trim();
+            if (text && currentMiniGoalId) {
+                editMiniGoal(currentMiniGoalId, text);
+            }
+        });
+
+        // Cerrar modales al hacer clic fuera
+        window.addEventListener('click', (e) => {
+            if (e.target === addMiniGoalModal) {
+                addMiniGoalModal.style.display = 'none';
+                miniGoalText.value = '';
+            }
+            if (e.target === deleteMiniGoalModal) {
+                deleteMiniGoalModal.style.display = 'none';
+            }
+            if (e.target === editMiniGoalModal) {
+                editMiniGoalModal.style.display = 'none';
+            }
+        });
+
+        // Permitir agregar con Enter
+        miniGoalText.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const text = miniGoalText.value.trim();
+                if (text) {
+                    addMiniGoal(text);
+                }
+            }
+        });
+
+        editMiniGoalText.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const text = editMiniGoalText.value.trim();
+                if (text && currentMiniGoalId) {
+                    editMiniGoal(currentMiniGoalId, text);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
