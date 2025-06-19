@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Craft - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6B73FF 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 24px;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .logo-image {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .app-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .app-subtitle {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            background: #f8f9fa;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            font-size: 20px;
+            z-index: 1;
+        }
+
+        .form-input.with-icon {
+            padding-left: 48px;
+        }
+
+        .form-input.with-suffix {
+            padding-right: 48px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 1;
+        }
+
+        .form-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .error-message {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            color: #c53030;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .error-icon {
+            color: #c53030;
+            font-size: 20px;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-button:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .login-button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .register-button {
+            width: 100%;
+            padding: 16px;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 16px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .register-button:hover {
+            background: #38a169;
+            transform: translateY(-1px);
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .register-link {
+            text-align: center;
+            color: #6c757d;
+        }
+
+        .register-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .field-error {
+            color: #c53030;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .logo {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .logo-image {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .app-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-section">
+            <div class="logo">
+                <img src="../assets/icon.png" alt="Mind Craft Logo" class="logo-image">
+            </div>
+            <h1 class="app-title">Mind Craft</h1>
+            <p class="app-subtitle">Bienvenido de vuelta</p>
+        </div>
+
+        <div class="form-container">
+            <form id="loginForm">
+                <div class="form-group">
+                    <div class="input-container">
+                        <div class="input-icon">📧</div>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            class="form-input with-icon" 
+                            placeholder="Correo Electrónico"
+                            required
+                        >
+                    </div>
+                    <div id="emailError" class="field-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-container">
+                        <div class="input-icon">🔒</div>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            class="form-input with-icon with-suffix" 
+                            placeholder="Contraseña"
+                            required
+                        >
+                        <button type="button" class="password-toggle" id="passwordToggle">
+                            👁️
+                        </button>
+                    </div>
+                    <div id="passwordError" class="field-error"></div>
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display: none;">
+                    <span class="error-icon">⚠️</span>
+                    <span id="errorText"></span>
+                </div>
+
+                <button type="submit" class="login-button" id="loginButton">
+                    <span id="buttonText">Iniciar Sesión</span>
+                    <div id="buttonSpinner" class="spinner" style="display: none;"></div>
+                </button>
+
+                <button type="button" class="register-button" id="registerButton">
+                    <span>👤 Crear Cuenta Nueva</span>
+                </button>
+
+                <div class="register-link">
+                    ¿No tienes cuenta? <a href="register.html" id="registerLink">Regístrate</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBEiNm3PiUYbKqb-vllnwfhQw2rIAumy5Y",
+            authDomain: "balatrobase-e14a5.firebaseapp.com",
+            projectId: "balatrobase-e14a5",
+            storageBucket: "balatrobase-e14a5.firebasestorage.app",
+            messagingSenderId: "828687429765",
+            appId: "1:828687429765:web:c09239689b1107fad2b9ec",
+            measurementId: "G-4VN4XPBGEL"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // DOM elements
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const passwordToggle = document.getElementById('passwordToggle');
+        const loginButton = document.getElementById('loginButton');
+        const registerButton = document.getElementById('registerButton');
+        const buttonText = document.getElementById('buttonText');
+        const buttonSpinner = document.getElementById('buttonSpinner');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+        const registerLink = document.getElementById('registerLink');
+
+        let isLoading = false;
+
+        // Password toggle functionality
+        passwordToggle.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            passwordToggle.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+
+        // Email validation
+        function validateEmail(email) {
+            const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+            return emailRegex.test(email);
+        }
+
+        // Form validation
+        function validateForm() {
+            let isValid = true;
+            
+            // Clear previous errors
+            emailError.textContent = '';
+            passwordError.textContent = '';
+            
+            // Validate email
+            const email = emailInput.value.trim();
+            if (!email) {
+                emailError.textContent = 'Por favor ingresa tu correo electrónico';
+                isValid = false;
+            } else if (!validateEmail(email)) {
+                emailError.textContent = 'Ingresa un correo electrónico válido';
+                isValid = false;
+            }
+            
+            // Validate password
+            const password = passwordInput.value;
+            if (!password) {
+                passwordError.textContent = 'Por favor ingresa tu contraseña';
+                isValid = false;
+            } else if (password.length < 6) {
+                passwordError.textContent = 'La contraseña debe tener al menos 6 caracteres';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        // Show error message
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.style.display = 'flex';
+        }
+
+        // Hide error message
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        // Show register button
+        function showRegisterButton() {
+            registerButton.style.display = 'flex';
+        }
+
+        // Hide register button
+        function hideRegisterButton() {
+            registerButton.style.display = 'none';
+        }
+
+        // Set loading state
+        function setLoading(loading) {
+            isLoading = loading;
+            loginButton.disabled = loading;
+            
+            if (loading) {
+                buttonText.style.display = 'none';
+                buttonSpinner.style.display = 'block';
+            } else {
+                buttonText.style.display = 'block';
+                buttonSpinner.style.display = 'none';
+            }
+        }
+
+        // Navigate to register page
+        function goToRegister() {
+            window.location.href = 'register.html';
+        }
+
+        // Handle login
+        async function handleLogin(email, password) {
+            try {
+                setLoading(true);
+                hideError();
+                hideRegisterButton();
+
+                // Sign out first to ensure clean state
+                await signOut(auth);
+                
+                // Small delay to ensure signout completes
+                await new Promise(resolve => setTimeout(resolve, 300));
+
+                // Sign in with new credentials
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                
+                if (userCredential.user) {
+                    // Reload user to get latest info
+                    await userCredential.user.reload();
+                    
+                    // Navigate to home page
+                    console.log('Login successful, navigating to home...');
+                    window.location.href = '../app/home_page.html';
+                }
+
+            } catch (error) {
+                console.error('Login error:', error);
+                
+                let errorMessage = '';
+                let showRegister = false;
+                
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = 'No se encontró una cuenta con este correo electrónico.';
+                        showRegister = true;
+                        break;
+                    case 'auth/invalid-credential':
+                        errorMessage = 'Correo electrónico o contraseña incorrectos.';
+                        showRegister = true;
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = 'Contraseña incorrecta.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Formato de correo electrónico inválido.';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = 'Error de conexión. Revisa tu internet.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Demasiados intentos fallidos. Intenta más tarde.';
+                        break;
+                    default:
+                        errorMessage = `Error al iniciar sesión: ${error.code}`;
+                }
+                
+                showError(errorMessage);
+                
+                if (showRegister) {
+                    showRegisterButton();
+                }
+                
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // Form submit handler
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (isLoading) return;
+            
+            if (!validateForm()) return;
+            
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            await handleLogin(email, password);
+        });
+
+        // Register button handler
+        registerButton.addEventListener('click', goToRegister);
+
+        // Register link handler
+        registerLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            goToRegister();
+        });
+
+        // Auth state observer
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log('User is signed in:', user.email);
+                // Could redirect to home page here if desired
+            } else {
+                console.log('User is signed out');
+            }
+        });
+
+        // Clear errors and hide register button when user starts typing
+        emailInput.addEventListener('input', () => {
+            emailError.textContent = '';
+            hideError();
+            hideRegisterButton();
+        });
+
+        passwordInput.addEventListener('input', () => {
+            passwordError.textContent = '';
+            hideError();
+            hideRegisterButton();
+        });
+    </script>
+</body>
+</html>
