@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Craft - Plataforma de Aprendizaje Personalizado</title>
+    <meta name="description"
+        content="Descubre Mind Craft, la plataforma que transforma tu forma de aprender con tecnología avanzada y métodos personalizados.">
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <!-- Firebase Configuration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBEiNm3PiUYbKqb-vllnwfhQw2rIAumy5Y",
+            authDomain: "balatrobase-e14a5.firebaseapp.com",
+            projectId: "balatrobase-e14a5",
+            storageBucket: "balatrobase-e14a5.firebasestorage.app",
+            messagingSenderId: "828687429765",
+            appId: "1:828687429765:web:c09239689b1107fad2b9ec",
+            measurementId: "G-4VN4XPBGEL"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Check if user is already logged in and redirect
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in, redirect to app
+                window.location.href = 'app/index.html'; // o donde tengas tu Flutter Web
+            }
+        });
+
+        // Make auth available globally for buttons
+        window.authInstance = auth;
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #6B73FF 100%);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><circle cx="200" cy="200" r="100" fill="rgba(255,255,255,0.05)"/><circle cx="800" cy="300" r="150" fill="rgba(255,255,255,0.03)"/><circle cx="400" cy="700" r="80" fill="rgba(255,255,255,0.07)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .hero-text .gradient-text {
+            background: linear-gradient(45deg, #ffffff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .app-preview {
+            width: 320px;
+            height: 600px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: float-device 6s ease-in-out infinite;
+        }
+
+        @keyframes float-device {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            33% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+
+            66% {
+                transform: translateY(5px) rotate(-1deg);
+            }
+        }
+
+        .app-preview::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: #ccc;
+            border-radius: 2px;
+        }
+
+        .app-screen {
+            padding: 40px 20px 20px;
+            height: 100%;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .app-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a202c;
+            margin-bottom: 10px;
+        }
+
+        .app-subtitle {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 30px;
+        }
+
+        .feature-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .feature-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .feature-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 2px;
+        }
+
+        .feature-desc {
+            font-size: 10px;
+            color: #718096;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            background: #f8fafc;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .features h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 1rem;
+        }
+
+        .features p {
+            font-size: 1.2rem;
+            color: #718096;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon-large {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 1rem;
+        }
+
+        .feature h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 1rem;
+        }
+
+        .feature p {
+            color: #718096;
+            margin-bottom: 0;
+        }
+
+        .app-logo img {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            object-fit: cover;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .app-preview {
+                width: 280px;
+                height: 520px;
+            }
+
+            .cta-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>
+          Mejora tu <span class="gradient-text">Constancia</span> con Mind Craft
+        </h1>
+        <p>
+          Esta aplicación fomenta la constancia personal y combate la procrastinación mediante metas claras y objetivos diarios. Registra tus avances en un diario digital y recibe sugerencias de un asistente de inteligencia artificial para mejorar tu rendimiento con estructura y motivación.
+        </p>
+        <div class="cta-buttons">
+          <a href="auth/login.html" class="btn btn-primary">🚀 Comenzar Ahora</a>
+          <a href="#features" class="btn btn-secondary">✨ Ver Características</a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="app-preview">
+          <div class="app-screen">
+            <div class="app-logo">
+              <img src="assets/icon.png" alt="Logo de la app" />
+            </div>
+            <div class="app-title">Mind Craft</div>
+            <div class="app-subtitle">Tu compañero de enfoque personal</div>
+
+            <div class="feature-cards">
+              <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-text">
+                  <div class="feature-title">Metas Claras</div>
+                  <div class="feature-desc">Organiza tu camino paso a paso</div>
+                </div>
+              </div>
+
+              <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <div class="feature-text">
+                  <div class="feature-title">Diario Digital</div>
+                  <div class="feature-desc">Registra tu progreso diario</div>
+                </div>
+              </div>
+
+              <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <div class="feature-text">
+                  <div class="feature-title">Asistente con IA</div>
+                  <div class="feature-desc">Sugerencias inteligentes personalizadas</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="features-container">
+      <h2>¿Por qué elegir Mind Craft?</h2>
+      <p>Transforma tu forma de trabajar hacia tus metas. Mind Craft estructura tu día a día y te motiva a dar lo mejor de ti.</p>
+
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon-large">🧠</div>
+          <h3>IA Asistida</h3>
+          <p>Recibe recomendaciones personalizadas para mantener tu motivación y mejorar tu enfoque.</p>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon-large">📅</div>
+          <h3>Objetivos Diarios</h3>
+          <p>Desglosa metas grandes en pequeños logros diarios alcanzables.</p>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon-large">💡</div>
+          <h3>Retroalimentación Constante</h3>
+          <p>Descubre patrones en tu comportamiento y corrige malos hábitos.</p>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon-large">🔥</div>
+          <h3>Progreso Visual</h3>
+          <p>Monitorea tus avances y visualiza tus logros con la racha.</p>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon-large">🔔</div>
+          <h3>Recordatorios Inteligentes</h3>
+          <p>No pierdas el ritmo con notificaciones útiles en los momentos clave del día.</p>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon-large">🔒</div>
+          <h3>Privacidad Garantizada</h3>
+          <p>Tu información es tuya. La protegemos con los estándares más altos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
