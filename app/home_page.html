@@ -1,1 +1,1381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Objetivos - App Híbrida</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #6C63FF, #3F51B5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .settings-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+
+        .settings-btn:hover {
+            opacity: 1;
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.1), 
+                rgba(255, 255, 255, 0.05)
+            );
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .section-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #6C63FF, #3F51B5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .goal-item {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.1), 
+                rgba(255, 255, 255, 0.05)
+            );
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .goal-item:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.15), 
+                rgba(255, 255, 255, 0.08)
+            );
+        }
+
+        .goal-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .goal-indicator {
+            width: 4px;
+            height: 40px;
+            background: linear-gradient(to bottom, #6C63FF, #3F51B5);
+            border-radius: 2px;
+        }
+
+        .goal-text {
+            flex: 1;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .goal-progress {
+            margin-top: 12px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6C63FF, #3F51B5);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-top: 6px;
+        }
+
+        .daily-goal-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.1), 
+                rgba(255, 255, 255, 0.05)
+            );
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .daily-goal-item:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.15), 
+                rgba(255, 255, 255, 0.08)
+            );
+        }
+
+        .daily-goal-item.completed {
+            opacity: 0.7;
+        }
+
+        .daily-goal-item.completed .daily-goal-text {
+            text-decoration: line-through;
+        }
+
+        .daily-goal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: linear-gradient(45deg, #6C63FF, #3F51B5);
+        }
+
+        .daily-goal-icon.completed {
+            background: linear-gradient(45deg, #4CAF50, #2E7D32);
+        }
+
+        .daily-goal-text {
+            flex: 1;
+            font-size: 16px;
+        }
+
+        .chevron {
+            opacity: 0.5;
+            font-size: 18px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            opacity: 0.6;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .fab-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: flex-end;
+        }
+
+        .fab {
+            background: linear-gradient(45deg, #6C63FF, #3F51B5);
+            border: none;
+            border-radius: 30px;
+            padding: 16px 24px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .fab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.5);
+        }
+
+        .fab.secondary {
+            background: linear-gradient(45deg, #FF6B6B, #FF5252);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .fab.secondary:hover {
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.2), 
+                rgba(255, 255, 255, 0.1)
+            );
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 32px;
+            max-width: 400px;
+            width: 90%;
+            color: white;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: linear-gradient(45deg, #6C63FF, #3F51B5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .modal-subtitle {
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #6C63FF, #3F51B5);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #4CAF50, #2E7D32);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+            z-index: 2000;
+            animation: slideUp 0.3s ease;
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translate(-50%, -60%);
+            }
+            to { 
+                opacity: 1; 
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateX(-50%) translateY(20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .fab-container {
+                right: 15px;
+                bottom: 15px;
+            }
+            
+            .modal-content {
+                padding: 24px;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Mis Objetivos</h1>
+            <div class="profile-section">
+                <div class="profile-avatar" id="profileAvatar">U</div>
+                <button class="settings-btn" onclick="openSettings()">⚙️</button>
+            </div>
+        </header>
+
+        <!-- Objetivos Diarios de Hoy -->
+        <section>
+            <div class="glass-card">
+                <div class="section-header">
+                    <div class="section-icon">📅</div>
+                    <h2 class="section-title">Objetivos Diarios de Hoy</h2>
+                </div>
+            </div>
+
+            <div id="dailyGoalsContainer">
+                <!-- Los objetivos diarios se cargarán aquí -->
+            </div>
+        </section>
+
+        <!-- Objetivos Semanales -->
+        <section>
+            <div class="glass-card">
+                <div class="section-header">
+                    <div class="section-icon">📋</div>
+                    <h2 class="section-title">Objetivos Semanales</h2>
+                </div>
+            </div>
+
+            <div id="weeklyGoalsContainer">
+                <!-- Los objetivos semanales se cargarán aquí -->
+            </div>
+        </section>
+    </div>
+
+    <!-- FAB Buttons -->
+    <div class="fab-container">
+        <button class="fab secondary" onclick="openCreateDailyGoal()">
+            📅 Crear Objetivo Diario
+        </button>
+    </div>
+
+    <!-- Modal para Crear Objetivo Diario -->
+    <div id="createDailyGoalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">📅</div>
+                <h3 class="modal-title">Nuevo Objetivo Diario</h3>
+                <p class="modal-subtitle">Crea un nuevo objetivo para cumplir diariamente</p>
+            </div>
+
+            <form id="dailyGoalForm">
+                <div class="form-group">
+                    <input type="text" id="dailyGoalText" class="form-input" 
+                           placeholder="Describe tu objetivo diario..." required>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: block; margin-bottom: 10px; opacity: 0.8;">
+                        Días de la semana:
+                    </label>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" value="Lunes" name="days" checked> Lunes
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" value="Martes" name="days" checked> Martes
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" value="Miércoles" name="days" checked> Miércoles
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" value="Jueves" name="days" checked> Jueves
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" value="Viernes" name="days" checked> Viernes
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" value="Sábado" name="days"> Sábado
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" value="Domingo" name="days"> Domingo
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('createDailyGoalModal')">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Crear Objetivo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Objetivo Diario -->
+    <div id="dailyGoalDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">🎯</div>
+                <h3 class="modal-title">Objetivo Diario</h3>
+                <p id="dailyGoalDetailText" class="modal-subtitle"></p>
+            </div>
+
+            <div class="button-group" style="margin-bottom: 16px;">
+                <button class="btn btn-primary" onclick="markDailyGoalCompleted()">
+                    ✅ Marcar Completado
+                </button>
+                <button class="btn" style="background: linear-gradient(45deg, #f44336, #d32f2f);" 
+                        onclick="markDailyGoalFailed()">
+                    ❌ Marcar Fallido
+                </button>
+            </div>
+
+            <button class="btn btn-secondary" onclick="closeModal('dailyGoalDetailModal')">
+                Cerrar
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Firebase Configuration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, where, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBEiNm3PiUYbKqb-vllnwfhQw2rIAumy5Y",
+            authDomain: "balatrobase-e14a5.firebaseapp.com",
+            projectId: "balatrobase-e14a5",
+            storageBucket: "balatrobase-e14a5.firebasestorage.app",
+            messagingSenderId: "828687429765",
+            appId: "1:828687429765:web:c09239689b1107fad2b9ec",
+            measurementId: "G-4VN4XPBGEL"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.auth = auth;
+        window.db = db;
+        window.addDoc = addDoc;
+        window.collection = collection;
+        window.getDocs = getDocs;
+        window.doc = doc;
+        window.updateDoc = updateDoc;
+        window.query = query;
+        window.where = where;
+        window.orderBy = orderBy;
+        window.Timestamp = Timestamp;
+
+        // Verificar autenticación
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Usuario autenticado
+                updateProfileInfo(user);
+                loadDailyGoals();
+                loadWeeklyGoals();
+            } else {
+                // Redirigir al login si no está autenticado
+                window.location.href = '/login.html';
+            }
+        });
+
+        function updateProfileInfo(user) {
+            const profileAvatar = document.getElementById('profileAvatar');
+            if (user.displayName) {
+                profileAvatar.textContent = user.displayName.charAt(0).toUpperCase();
+            } else if (user.email) {
+                profileAvatar.textContent = user.email.charAt(0).toUpperCase();
+            }
+        }
+    </script>
+
+    <script>
+        let currentGoalId = null;
+        let currentUser = null;
+
+        // Datos de ejemplo para demostración
+        let dailyGoals = [
+            {
+                id: '1',
+                texto: 'Hacer ejercicio por 30 minutos',
+                dias: ['Lunes', 'Miércoles', 'Viernes'],
+                completado: {}
+            },
+            {
+                id: '2',
+                texto: 'Leer 20 páginas de un libro',
+                dias: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'],
+                completado: {}
+            }
+        ];
+
+        let weeklyGoals = [
+            {
+                id: '1',
+                texto: 'Completar el proyecto de trabajo',
+                miniobjetivos: [
+                    { texto: 'Investigar tecnologías', completado: true },
+                    { texto: 'Crear prototipo', completado: true },
+                    { texto: 'Implementar funcionalidades', completado: false },
+                    { texto: 'Hacer pruebas', completado: false }
+                ]
+            },
+            {
+                id: '2',
+                texto: 'Aprender una nueva habilidad',
+                miniobjetivos: [
+                    { texto: 'Elegir curso online', completado: true },
+                    { texto: 'Completar módulo 1', completado: false },
+                    { texto: 'Hacer ejercicios prácticos', completado: false }
+                ]
+            }
+        ];
+
+        // Funciones de utilidad
+        function getCurrentDay() {
+            const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+            return days[new Date().getDay()];
+        }
+
+        function getTodayString() {
+            const today = new Date();
+            return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        }
+
+        function isDayActive(days) {
+            const currentDay = getCurrentDay();
+            return days.includes(currentDay);
+        }
+
+        // Cargar objetivos diarios
+        async function loadDailyGoals() {
+            const container = document.getElementById('dailyGoalsContainer');
+            const todayString = getTodayString();
+            const todayGoals = dailyGoals.filter(goal => isDayActive(goal.dias));
+
+            if (todayGoals.length === 0) {
+                container.innerHTML = `
+                    <div class="glass-card">
+                        <div class="empty-state">
+                            <div class="empty-icon">📅</div>
+                            <p>No tienes objetivos diarios para hoy.</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = todayGoals.map(goal => {
+                const isCompleted = goal.completado[todayString] === true;
+                return `
+                    <div class="daily-goal-item ${isCompleted ? 'completed' : ''}" 
+                         onclick="openDailyGoalDetail('${goal.id}', '${goal.texto}', ${isCompleted})">
+                        <div class="daily-goal-icon ${isCompleted ? 'completed' : ''}">
+                            ${isCompleted ? '✅' : '📅'}
+                        </div>
+                        <div class="daily-goal-text">${goal.texto}</div>
+                        <div class="chevron">›</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Cargar objetivos semanales
+        function loadWeeklyGoals() {
+            const container = document.getElementById('weeklyGoalsContainer');
+
+            if (weeklyGoals.length === 0) {
+                container.innerHTML = `
+                    <div class="glass-card">
+                        <div class="empty-state">
+                            <div class="empty-icon">📋</div>
+                            <p>No tienes objetivos semanales aún.</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = weeklyGoals.map(goal => {
+                const completedCount = goal.miniobjetivos.filter(mini => mini.completado).length;
+                const totalCount = goal.miniobjetivos.length;
+                const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+
+                return `
+                    <div class="goal-item">
+                        <div class="goal-content">
+                            <div class="goal-indicator"></div>
+                            <div class="goal-text">${goal.texto}</div>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                            </div>
+                            <div class="progress-text">${completedCount}/${totalCount} completados</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Modales
+        function openCreateDailyGoal() {
+            document.getElementById('createDailyGoalModal').style.display = 'block';
+        }
+
+        function openDailyGoalDetail(goalId, texto, isCompleted) {
+            currentGoalId = goalId;
+            document.getElementById('dailyGoalDetailText').textContent = texto;
+            document.getElementById('dailyGoalDetailModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            currentGoalId = null;
+        }
+
+        // Funciones de objetivos diarios
+        function markDailyGoalCompleted() {
+            if (!currentGoalId) return;
+
+            const todayString = getTodayString();
+            const goal = dailyGoals.find(g => g.id === currentGoalId);
+            if (goal) {
+                goal.completado[todayString] = true;
+                showToast('¡Objetivo completado! 🎉');
+                loadDailyGoals();
+                closeModal('dailyGoalDetailModal');
+            }
+        }
+
+        function markDailyGoalFailed() {
+            if (!currentGoalId) return;
+
+            const todayString = getTodayString();
+            const goal = dailyGoals.find(g => g.id === currentGoalId);
+            if (goal) {
+                goal.completado[todayString] = false;
+                showToast('Objetivo marcado como fallido');
+                loadDailyGoals();
+                closeModal('dailyGoalDetailModal');
+            }
+        }
+
+        // Crear nuevo objetivo diario
+        document.getElementById('dailyGoalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const texto = document.getElementById('dailyGoalText').value.trim();
+            const selectedDays = Array.from(document.querySelectorAll('input[name="days"]:checked'))
+                                     .map(checkbox => checkbox.value);
+
+            if (!texto || selectedDays.length === 0) {
+                showToast('Por favor completa todos los campos');
+                return;
+            }
+
+            const newGoal = {
+                id: Date.now().toString(),
+                texto: texto,
+                dias: selectedDays,
+                completado: {}
+            };
+
+            dailyGoals.push(newGoal);
+            loadDailyGoals();
+            closeModal('createDailyGoalModal');
+            document.getElementById('dailyGoalForm').reset();
+            
+            // Volver a marcar los días de semana por defecto
+            document.querySelectorAll('input[name="days"]').forEach((checkbox, index) => {
+                checkbox.checked = index < 5; // Lunes a Viernes
+            });
+
+            showToast('¡Objetivo diario creado exitosamente!');
+        });
+
+        // Otras funciones
+        function showDailyGoals() {
+            window.location.href = 'daily_objectives.html';
+        }
+
+        function openSettings() {
+            showToast('Función: Abrir configuración');
+            }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Cerrar modales al hacer clic fuera
+        window.addEventListener('click', function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                    currentGoalId = null;
+                }
+            });
+        });
+
+        // Inicializar la aplicación
+        function initializeApp() {
+            loadDailyGoals();
+            loadWeeklyGoals();
+        }
+
+        // Función para cerrar sesión
+        function openSettings() {
+            if (confirm('¿Deseas cerrar sesión?')) {
+                window.auth.signOut().then(() => {
+                    window.location.href = '../auth/login.html';
+                }).catch((error) => {
+                    showToast('Error al cerrar sesión');
+                });
+            }
+        }
+
+        // Firebase Authentication State Changed ya está manejado en el script module
+        // Funciones adicionales para Firebase (cuando esté listo)
+        
+        // Cargar objetivos diarios desde Firebase
+        async function loadDailyGoalsFromFirebase() {
+            if (!window.auth.currentUser) return;
+            
+            try {
+                const userId = window.auth.currentUser.uid;
+                const q = window.query(
+                    window.collection(window.db, 'usuarios', userId, 'objetivos_diarios'),
+                    window.orderBy('fecha', 'desc')
+                );
+                const querySnapshot = await window.getDocs(q);
+                
+                dailyGoals = [];
+                querySnapshot.forEach((doc) => {
+                    dailyGoals.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                loadDailyGoals();
+            } catch (error) {
+                console.error('Error loading daily goals:', error);
+                showToast('Error al cargar objetivos diarios');
+            }
+        }
+
+        // Guardar objetivo diario en Firebase
+        async function saveDailyGoalToFirebase(goalData) {
+            if (!window.auth.currentUser) return;
+            
+            try {
+                const userId = window.auth.currentUser.uid;
+                const docRef = await window.addDoc(
+                    window.collection(window.db, 'usuarios', userId, 'objetivos_diarios'),
+                    {
+                        ...goalData,
+                        fecha: window.Timestamp.now(),
+                        userId: userId
+                    }
+                );
+                
+                return docRef.id;
+            } catch (error) {
+                console.error('Error saving daily goal:', error);
+                showToast('Error al guardar objetivo');
+                return null;
+            }
+        }
+
+        // Actualizar estado de objetivo diario en Firebase
+        async function updateDailyGoalInFirebase(goalId, updates) {
+            if (!window.auth.currentUser) return;
+            
+            try {
+                const userId = window.auth.currentUser.uid;
+                const goalRef = window.doc(window.db, 'usuarios', userId, 'objetivos_diarios', goalId);
+                await window.updateDoc(goalRef, updates);
+                return true;
+            } catch (error) {
+                console.error('Error updating daily goal:', error);
+                showToast('Error al actualizar objetivo');
+                return false;
+            }
+        }
+
+        // Modificar la función de crear objetivo para usar Firebase
+        document.getElementById('dailyGoalForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const texto = document.getElementById('dailyGoalText').value.trim();
+            const selectedDays = Array.from(document.querySelectorAll('input[name="days"]:checked'))
+                                     .map(checkbox => checkbox.value);
+
+            if (!texto || selectedDays.length === 0) {
+                showToast('Por favor completa todos los campos');
+                return;
+            }
+
+            const newGoalData = {
+                texto: texto,
+                dias: selectedDays,
+                completado: {}
+            };
+
+            // Intentar guardar en Firebase primero
+            const firebaseId = await saveDailyGoalToFirebase(newGoalData);
+            
+            if (firebaseId) {
+                newGoalData.id = firebaseId;
+            } else {
+                // Fallback a almacenamiento local
+                newGoalData.id = Date.now().toString();
+            }
+
+            dailyGoals.push(newGoalData);
+            loadDailyGoals();
+            closeModal('createDailyGoalModal');
+            document.getElementById('dailyGoalForm').reset();
+            
+            // Volver a marcar los días de semana por defecto
+            document.querySelectorAll('input[name="days"]').forEach((checkbox, index) => {
+                checkbox.checked = index < 5; // Lunes a Viernes
+            });
+
+            showToast('¡Objetivo diario creado exitosamente!');
+        });
+
+        // Modificar las funciones de marcar completado/fallido para usar Firebase
+        async function markDailyGoalCompleted() {
+            if (!currentGoalId) return;
+
+            const todayString = getTodayString();
+            const goal = dailyGoals.find(g => g.id === currentGoalId);
+            if (!goal) return;
+
+            goal.completado[todayString] = true;
+            
+            // Actualizar en Firebase
+            const updates = { [`completado.${todayString}`]: true };
+            await updateDailyGoalInFirebase(currentGoalId, updates);
+            
+            showToast('¡Objetivo completado! 🎉');
+            loadDailyGoals();
+            closeModal('dailyGoalDetailModal');
+        }
+
+        async function markDailyGoalFailed() {
+            if (!currentGoalId) return;
+
+            const todayString = getTodayString();
+            const goal = dailyGoals.find(g => g.id === currentGoalId);
+            if (!goal) return;
+
+            goal.completado[todayString] = false;
+            
+            // Actualizar en Firebase
+            const updates = { [`completado.${todayString}`]: false };
+            await updateDailyGoalInFirebase(currentGoalId, updates);
+            
+            showToast('Objetivo marcado como fallido');
+            loadDailyGoals();
+            closeModal('dailyGoalDetailModal');
+        }
+
+        // CSS faltante para el toast
+        const toastStyles = `
+            .toast {
+                position: fixed;
+                bottom: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 25px;
+                font-size: 14px;
+                z-index: 10000;
+                opacity: 0;
+                transition: all 0.3s ease;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .toast.show {
+                opacity: 1;
+                transform: translateX(-50%) translateY(-10px);
+            }
+
+            .glass-card {
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(10px);
+                border-radius: 20px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            }
+
+            .section-header {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+
+            .section-icon {
+                font-size: 24px;
+            }
+
+            .section-title {
+                font-size: 20px;
+                font-weight: 600;
+                color: white;
+            }
+
+            .daily-goal-item {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 16px;
+                padding: 16px;
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .daily-goal-item:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-2px);
+            }
+
+            .daily-goal-item.completed {
+                background: rgba(76, 175, 80, 0.2);
+                border-color: rgba(76, 175, 80, 0.3);
+            }
+
+            .daily-goal-icon {
+                font-size: 20px;
+                width: 24px;
+                text-align: center;
+            }
+
+            .daily-goal-text {
+                flex: 1;
+                font-size: 16px;
+                color: white;
+            }
+
+            .chevron {
+                font-size: 20px;
+                color: rgba(255, 255, 255, 0.6);
+            }
+
+            .goal-item {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 16px;
+                padding: 16px;
+                margin-bottom: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .goal-content {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+
+            .goal-indicator {
+                width: 8px;
+                height: 8px;
+                background: #4CAF50;
+                border-radius: 50%;
+                margin-top: 6px;
+            }
+
+            .goal-text {
+                flex: 1;
+                font-size: 16px;
+                color: white;
+                line-height: 1.4;
+            }
+
+            .goal-progress {
+                margin-left: 20px;
+            }
+
+            .progress-bar {
+                width: 100%;
+                height: 6px;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 3px;
+                overflow: hidden;
+                margin-bottom: 8px;
+            }
+
+            .progress-fill {
+                height: 100%;
+                background: linear-gradient(90deg, #4CAF50, #81C784);
+                border-radius: 3px;
+                transition: width 0.3s ease;
+            }
+
+            .progress-text {
+                font-size: 12px;
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+            .empty-state {
+                text-align: center;
+                padding: 40px 20px;
+            }
+
+            .empty-icon {
+                font-size: 48px;
+                margin-bottom: 16px;
+                opacity: 0.6;
+            }
+
+            .empty-state p {
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 16px;
+            }
+
+            .fab-container {
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                display: flex;
+                gap: 12px;
+                z-index: 1000;
+            }
+
+            .fab {
+                background: linear-gradient(45deg, #667eea, #764ba2);
+                border: none;
+                border-radius: 25px;
+                padding: 12px 20px;
+                color: white;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .fab:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            }
+
+            .fab.secondary {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 10000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(5px);
+            }
+
+            .modal-content {
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+                margin: 10% auto;
+                padding: 0;
+                border-radius: 20px;
+                max-width: 400px;
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+                overflow: hidden;
+            }
+
+            .modal-header {
+                padding: 24px;
+                text-align: center;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .modal-icon {
+                font-size: 48px;
+                margin-bottom: 12px;
+            }
+
+            .modal-title {
+                font-size: 24px;
+                font-weight: 600;
+                color: white;
+                margin-bottom: 8px;
+            }
+
+            .modal-subtitle {
+                font-size: 16px;
+                color: rgba(255, 255, 255, 0.8);
+                line-height: 1.4;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-input {
+                width: 100%;
+                padding: 16px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 12px;
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                font-size: 16px;
+                backdrop-filter: blur(10px);
+            }
+
+            .form-input::placeholder {
+                color: rgba(255, 255, 255, 0.6);
+            }
+
+            .form-input:focus {
+                outline: none;
+                border-color: rgba(255, 255, 255, 0.4);
+                background: rgba(255, 255, 255, 0.15);
+            }
+
+            .button-group {
+                display: flex;
+                gap: 12px;
+                padding: 24px;
+            }
+
+            .btn {
+                flex: 1;
+                padding: 14px 20px;
+                border: none;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .btn-primary {
+                background: linear-gradient(45deg, #667eea, #764ba2);
+                color: white;
+            }
+
+            .btn-secondary {
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            }
+
+            input[type="checkbox"] {
+                accent-color: #667eea;
+                width: 18px;
+                height: 18px;
+            }
+
+            label {
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 14px;
+            }
+        `;
+
+        // Agregar estilos al documento
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = toastStyles;
+        document.head.appendChild(styleSheet);
+
+        // Llamar a la inicialización cuando el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
+    </script>
+</body>
+</html>
